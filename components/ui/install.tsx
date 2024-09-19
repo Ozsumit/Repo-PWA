@@ -163,7 +163,7 @@ const PWAInstallAndNotifications: React.FC = () => {
   return (
     <>
       {showInstallPrompt && !isInstalled && (
-        <div className="fixed bottom-4 right-4 bg-black text-white p-4 rounded-lg shadow-lg z-[100] flex items-center space-x-2">
+        <div className="fixed right-4 bg-black text-white p-4 rounded-lg shadow-lg z-[100] flex items-center space-x-2">
           <Download className="h-5 w-5" />
           <p className="text-sm">Install our app!</p>
           <Button onClick={handleInstall} variant="outline" size="sm">
@@ -178,7 +178,7 @@ const PWAInstallAndNotifications: React.FC = () => {
           </Button>
         </div>
       )}
-      {isPushSupported && showNotificationPrompt && (
+      {/* {isPushSupported && showNotificationPrompt && (
         <div className="fixed bottom-4 right-4 bg-black text-white p-4 rounded-lg shadow-lg z-[100] flex items-center space-x-2">
           <Bell className="h-5 w-5" />
           <p className="text-sm z-50">
@@ -199,7 +199,7 @@ const PWAInstallAndNotifications: React.FC = () => {
             <X className="h-4 w-4" />
           </Button>
         </div>
-      )}
+      )} */}
     </>
   );
 };
