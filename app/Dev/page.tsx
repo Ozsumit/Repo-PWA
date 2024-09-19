@@ -134,7 +134,7 @@ const MyPage: React.FC = () => {
               role="Contributor: Nepali/Wmad/Os"
               imageUrl="/images/denisa.jpeg"
               Instagram="https://twitter.com/johndoe"
-              github="https://github.com/johndoe"
+              github="#"
               email="john@example.com"
             />
             <PersonCard
@@ -158,7 +158,7 @@ const MyPage: React.FC = () => {
               role="Contributor: Nepali/Wmad/Os"
               imageUrl="/images/pratik.png"
               Instagram="https://twitter.com/johndoe"
-              github="https://github.com/johndoe"
+              github="#"
               email="john@example.com"
             />
           </div>
