@@ -9,25 +9,6 @@ import { Home, Phone, CodeXml, Search, DollarSign, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Toaster } from "sonner";
 import PulsatingButton from "@/components/ui/button";
-// import PWAInstallPrompt from "@/components/ui/pwapushnotifications";
-// import Page from "@/components/ui/PushNotificationManager";
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then((registration) => {
-        console.log(
-          "Service Worker registered with scope:",
-          registration.scope
-        );
-      })
-      .catch((error) => {
-        console.error("Service Worker registration failed:", error);
-      });
-  });
-} else {
-  console.log("Service Workers are not supported in this browser.");
-}
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -144,7 +125,7 @@ export default function RootLayout({
           <div
             className={`md:hidden ${
               isMenuOpen ? "block" : "hidden"
-            } p-4 transition-all z-[100] fixed bg-[#050505] rounded-xl justify-center  w-[90vw] items-center flex flex-col   duration-300`}
+            } p-4 transition-all z-[100] bg-gray-600 justify-center  w-[99vw] items-center flex flex-col   duration-300`}
           >
             <NavItem href="/" icon={Home} title="Home" />
             <NavItem href="/contact" icon={Phone} title="Contact" />
@@ -161,7 +142,6 @@ export default function RootLayout({
         </header>
 
         <main className=" justify-center items-center flex-col flex">
-          {/* <PWAInstallPrompt /> */}
           {children}
         </main>
 

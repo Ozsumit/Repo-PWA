@@ -123,7 +123,7 @@ const MyPage: React.FC = () => {
             <PersonCard
               name="Sumit Pokhrel"
               role="Developer"
-              imageUrl="/images/sumit2.jpg"
+              imageUrl="./images/sumit2.jpg"
               linkedin="https://www.linkedin.com/in/sumit-pokhrel-/"
               Instagram="https://www.instagram.com/sumitp0khrel/"
               github="https://github.com/ozsumit"
@@ -132,15 +132,15 @@ const MyPage: React.FC = () => {
             <PersonCard
               name="Denisha Adhikari"
               role="Contributor: Nepali/Wmad/Os"
-              imageUrl="/images/denisa.jpeg"
+              imageUrl="./images/denisa.jpeg"
               Instagram="https://twitter.com/johndoe"
-              github="#"
+              github="https://github.com/johndoe"
               email="john@example.com"
             />
             <PersonCard
               name="Diya Bhattarai"
               role="Developer: Bug Tester"
-              imageUrl="/images/diya.jpg"
+              imageUrl="./images/diya.jpg"
               Instagram="https://www.instagram.com/_diya_bhattarai_/"
               github="#"
               email="#"
@@ -148,7 +148,7 @@ const MyPage: React.FC = () => {
             <PersonCard
               name="Alish Gautam"
               role="Developer: Bug Tester"
-              imageUrl="/images/alish.jpg"
+              imageUrl="./images/alish.jpg"
               Instagram="https://www.instagram.com/alish_gautam11/"
               github="https://www.github.com/AZalish"
               email="alishgautam27@gmail.com"
@@ -156,9 +156,9 @@ const MyPage: React.FC = () => {
             <PersonCard
               name="Pratik Timsina"
               role="Contributor: Nepali/Wmad/Os"
-              imageUrl="/images/pratik.png"
+              imageUrl="./images/pratik.png"
               Instagram="https://twitter.com/johndoe"
-              github="#"
+              github="https://github.com/johndoe"
               email="john@example.com"
             />
           </div>
