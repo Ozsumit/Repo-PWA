@@ -1,12 +1,16 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { toast, Toaster } from "sonner";
 import Link from "next/link";
 import { ShootingStars } from "@/components/ui/shooting-stars";
+
 import { StarsBackground } from "@/components/ui/stars-background";
 import { X } from "lucide-react";
-import Footer from "@/components/ui/footer"; // Import the Footer component
+import Footer from "@/components/ui/footer";
+import PWAInstallAndNotifications from "@/components/ui/install";
+// import Notifications from "@/components/ui/setnot";
+// import Page from "@/components/ui/PushNotificationManager";
 
 const MyPage: React.FC = () => {
   // const showToast = useCallback(() => {
@@ -124,7 +128,9 @@ const MyPage: React.FC = () => {
             className="my-custom-class fade-from-right"
           />
         </div>
-        <Footer items={items} />{" "}
+        <Footer items={items} />
+        <PWAInstallAndNotifications />
+        {/* <Notifications /> */}
       </div>
       {/*       <Toaster richColors /> */}
       {/* Pass the items array to the Footer component */}
