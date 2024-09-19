@@ -66,7 +66,7 @@ const PWAInstallPrompt: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg flex items-center justify-between">
+    <div className="fixed bottom-4 left-4 right-4 bg-black p-4 text-black rounded-lg shadow-lg z-[100] flex items-center justify-between">
       <p className="text-sm">Install our app for a better experience!</p>
       <div className="flex items-center space-x-2">
         <Button onClick={handleInstall} variant="outline" size="sm">
