@@ -3,25 +3,101 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #000;
+  --background-color: #fff;
+  --text-color: #000;
+  /* Add more variables as needed */
+}
+.clipbg {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+[data-theme="dark"] {
+  --primary-color: #fff;
+  --background-color: #080808;
+  --text-color: #fff;
+}
+
+[data-theme="light"] {
+  --primary-color: #000;
+  --background-color: #fff;
+  --text-color: #000;
+}
+.sengine {
+  scrollbar-width: none;
+}
+html {
+  scroll-behavior: smooth;
+  /* scrollbar-width: none;
+   */
+  overflow-x: hidden;
+}
+.fadefromblack {
+  animation: fadefromblack 1s ease-in-out 1 forwards;
+  -webkit-animation: fadefromblack 1s ease-in-out 1 forwards;
+}
+
+.nav {
+  a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #d6d6d6;
+    text-decoration: none;
+    font-family: "Gemunu Libre", sans-serif;
+    font-size: 1.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    /* padding: 0.5rem 0.3rem; */
+    transition: color 0.3s ease, background-color 0.3s ease;
+    -webkit-transition: color 0.3s ease, background-color 0.3s ease;
+    -moz-transition: color 0.3s ease, background-color 0.3s ease;
+    -ms-transition: color 0.3s ease, background-color 0.3s ease;
+    -o-transition: color 0.3s ease, background-color 0.3s ease;
+  }
+
+  a::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #4ade80;
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+
+  a:hover {
+    color: #ffffff;
+    /* background-color: rgba(255, 255, 255, 0.1); */
+  }
+
+  a:hover::before {
+    width: 100%;
+    left: 0;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@keyframes fadefromblack {
+  from {
+    opacity: 0;
+    scale: 1;
+    transform: translateY(-50px);
+    -webkit-transform: translateY(-50px);
+    -moz-transform: translateY(-50px);
+    -ms-transform: translateY(-50px);
+    -o-transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    transform: translateY(0px);
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    -o-transform: translateY(0px);
   }
 }
