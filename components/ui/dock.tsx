@@ -13,7 +13,7 @@ export interface DockProps extends VariantProps<typeof dockVariants> {
 const DEFAULT_MAGNIFICATION = 1.2;
 
 const dockVariants = cva(
-  "mx-auto w-full h-[58px] p-2 flex justify-around items-center rounded-full  dark:bg-black"
+  "mx-auto w-[97vw] h-[58px] p-2 flex justify-around items-center rounded-full  dark:bg-black"
 );
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(

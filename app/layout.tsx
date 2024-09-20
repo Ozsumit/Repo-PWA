@@ -140,8 +140,8 @@ export default function RootLayout({
             scrolled ? "" : "bg-transparent"
           }`}
         >
-          <div className="navigation flex flex-row justify-center items-center w-[98vw] mx-2">
-            <div className="flex w-[98vw] lg:justify-between justify-between items-center py-4">
+          <div className="navigation flex flex-row justify-center items-center w-[96vw] mx-0">
+            <div className="flex w-[97vw] lg:justify-between justify-between items-center py-4">
               <Link href="/" className="flex items-center">
                 <Image width={100} height={100} src={logo} alt="Logo" />
               </Link>
