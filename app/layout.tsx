@@ -11,6 +11,8 @@ import { Toaster } from "sonner";
 import PulsatingButton from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { useRouter, usePathname } from "next/navigation";
+import { useServiceWorker } from "@/hooks/useServiceWorker";
+
 import Head from "next/head";
 import { PushNotificationSubscriber } from "@/components//ui/pushnotification";
 
@@ -53,6 +55,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useServiceWorker();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showNav, setShowNav] = useState(true);
@@ -87,7 +90,7 @@ export default function RootLayout({
         <title>Twilight</title>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=0.2, maximum-scale=1"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Head>
       <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col">

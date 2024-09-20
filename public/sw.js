@@ -46,3 +46,34 @@ async function syncNotifications() {
     console.error("Failed to sync notifications:", error);
   }
 }
+// public/service-worker.js
+const CACHE_NAME = "offline-cache-v1";
+const OFFLINE_URL = "@/app/offline";
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.add(OFFLINE_URL))
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(OFFLINE_URL);
+      })
+    );
+  }
+});
+
+// Keep existing push notification logic
+self.addEventListener("push", function (event) {
+  const data = event.data.json();
+  const options = {
+    body: data.body,
+    icon: "/icon-192x192.png",
+    badge: "/badge-72x72.png",
+  };
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
+});
