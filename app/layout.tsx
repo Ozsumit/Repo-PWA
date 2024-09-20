@@ -17,8 +17,8 @@ interface NavItemProps {
   href: string;
   icon: React.ElementType;
   title: string;
-  isActive?: boolean;
 }
+
 const NavItem: React.FC<NavItemProps> = ({ href, icon: Icon, title }) => (
   <Link
     title={title}
@@ -55,7 +55,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [activeNavItem, setActiveNavItem] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showNav, setShowNav] = useState(true);
@@ -127,45 +126,24 @@ export default function RootLayout({
         {/* Mobile Navigation */}
         <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-white/[0.2] z-50 md:hidden">
           <Dock className="py-2 px-4">
-            <DockIcon onClick={() => setActiveNavItem("/")}>
-              <MobileNavItem
-                href="/"
-                icon={Home}
-                title="Home"
-                isActive={activeNavItem === "/"}
-              />
+            <DockIcon>
+              <MobileNavItem href="/" icon={Home} title="Home" />
             </DockIcon>
-            <DockIcon onClick={() => setActiveNavItem("/contact")}>
-              <MobileNavItem
-                href="/contact"
-                icon={Phone}
-                title="Contact"
-                isActive={activeNavItem === "/contact"}
-              />
+            <DockIcon>
+              <MobileNavItem href="/contact" icon={Phone} title="Contact" />
             </DockIcon>
-            <DockIcon onClick={() => setActiveNavItem("/Dev")}>
-              <MobileNavItem
-                href="/Dev"
-                icon={CodeXml}
-                title="Dev"
-                isActive={activeNavItem === "/Dev"}
-              />
+            <DockIcon>
+              <MobileNavItem href="/Dev" icon={CodeXml} title="Dev" />
             </DockIcon>
-            <DockIcon onClick={() => setActiveNavItem("/QuickFind")}>
+            <DockIcon>
               <MobileNavItem
                 href="/QuickFind"
                 icon={Search}
                 title="Quick find"
-                isActive={activeNavItem === "/QuickFind"}
               />
             </DockIcon>
-            <DockIcon onClick={() => setActiveNavItem("/donate")}>
-              <MobileNavItem
-                href="/donate"
-                icon={DollarSign}
-                title="Donate"
-                isActive={activeNavItem === "/donate"}
-              />
+            <DockIcon>
+              <MobileNavItem href="/donate" icon={DollarSign} title="Donate" />
             </DockIcon>
           </Dock>
         </nav>
