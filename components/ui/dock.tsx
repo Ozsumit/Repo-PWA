@@ -1,5 +1,3 @@
-"use client";
-
 import React, { PropsWithChildren, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion, AnimatePresence } from "framer-motion";
@@ -55,6 +53,7 @@ export interface DockIconProps {
   isActive?: boolean;
   onActivate?: () => void;
   onDeactivate?: () => void;
+  onClick?: () => void; // New onClick prop
   className?: string;
   children?: React.ReactNode;
   props?: PropsWithChildren;
@@ -65,10 +64,17 @@ const DockIcon = ({
   isActive = false,
   onActivate,
   onDeactivate,
+  onClick, // New onClick prop
   className,
   children,
   ...props
 }: DockIconProps) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <motion.div
       animate={{
@@ -86,6 +92,7 @@ const DockIcon = ({
       )}
       onTouchStart={onActivate}
       onTouchEnd={onDeactivate}
+      onClick={handleClick} // Add onClick handler
       {...props}
     >
       {children}

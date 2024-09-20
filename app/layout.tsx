@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { Toaster } from "sonner";
 import PulsatingButton from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/ui/dock";
+import { useRouter, usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +18,7 @@ interface NavItemProps {
   href: string;
   icon: React.ElementType;
   title: string;
+  isActive?: boolean;
 }
 
 const NavItem: React.FC<NavItemProps> = ({ href, icon: Icon, title }) => (
@@ -37,17 +39,12 @@ const MobileNavItem: React.FC<NavItemProps> = ({
   icon: Icon,
   isActive,
 }) => (
-  <Link
-    href={href}
-    className="flex flex-col items-center justify-center w-full h-full transition-colors duration-300"
-  >
-    <Icon
-      size={24}
-      className={`${
-        isActive ? "text-green-400" : "text-gray-400"
-      } transition-colors duration-300`}
-    />
-  </Link>
+  <Icon
+    size={24}
+    className={`${
+      isActive ? "text-green-400" : "text-gray-400"
+    } transition-colors duration-300`}
+  />
 );
 
 export default function RootLayout({
@@ -58,6 +55,8 @@ export default function RootLayout({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showNav, setShowNav] = useState(true);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -126,24 +125,45 @@ export default function RootLayout({
         {/* Mobile Navigation */}
         <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-white/[0.2] z-50 md:hidden">
           <Dock className="py-2 px-4">
-            <DockIcon>
-              <MobileNavItem href="/" icon={Home} title="Home" />
+            <DockIcon onClick={() => router.push("/")}>
+              <MobileNavItem
+                href="/"
+                icon={Home}
+                title="Home"
+                isActive={pathname === "/"}
+              />
             </DockIcon>
-            <DockIcon>
-              <MobileNavItem href="/contact" icon={Phone} title="Contact" />
+            <DockIcon onClick={() => router.push("/contact")}>
+              <MobileNavItem
+                href="/contact"
+                icon={Phone}
+                title="Contact"
+                isActive={pathname === "/contact"}
+              />
             </DockIcon>
-            <DockIcon>
-              <MobileNavItem href="/Dev" icon={CodeXml} title="Dev" />
+            <DockIcon onClick={() => router.push("/Dev")}>
+              <MobileNavItem
+                href="/Dev"
+                icon={CodeXml}
+                title="Dev"
+                isActive={pathname === "/Dev"}
+              />
             </DockIcon>
-            <DockIcon>
+            <DockIcon onClick={() => router.push("/QuickFind")}>
               <MobileNavItem
                 href="/QuickFind"
                 icon={Search}
                 title="Quick find"
+                isActive={pathname === "/QuickFind"}
               />
             </DockIcon>
-            <DockIcon>
-              <MobileNavItem href="/donate" icon={DollarSign} title="Donate" />
+            <DockIcon onClick={() => router.push("/donate")}>
+              <MobileNavItem
+                href="/donate"
+                icon={DollarSign}
+                title="Donate"
+                isActive={pathname === "/donate"}
+              />
             </DockIcon>
           </Dock>
         </nav>
