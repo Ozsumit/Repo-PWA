@@ -19,4 +19,4 @@ const withPWAConfig = withPWA({
 });
 
 // @ts-ignore
-export default withPWAConfig(nextConfig);
+// export default withPWAConfig(nextConfig);
