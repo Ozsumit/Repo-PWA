@@ -11,7 +11,7 @@ import { Toaster } from "sonner";
 import PulsatingButton from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { useRouter, usePathname } from "next/navigation";
-import { useServiceWorker } from "@/hooks/useServiceWorker";
+// import { useServiceWorker } from "@/hooks/useServiceWorker";
 
 import Head from "next/head";
 import { PushNotificationSubscriber } from "@/components//ui/pushnotification";
@@ -50,15 +50,17 @@ const MobileNavItem: React.FC<NavItemProps> = ({
     } transition-colors duration-300`}
   />
 );
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  useServiceWorker();
+  // useServiceWorker();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showNav, setShowNav] = useState(true);
+  const [isOffline, setIsOffline] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -84,6 +86,43 @@ export default function RootLayout({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").then(
+        function (registration) {
+          console.log(
+            "Service Worker registered with scope:",
+            registration.scope
+          );
+        },
+        function (err) {
+          console.log("Service Worker registration failed:", err);
+        }
+      );
+
+      const handleOffline = () => {
+        setIsOffline(true);
+        router.push("/offline");
+      };
+
+      const handleOnline = () => {
+        setIsOffline(false);
+      };
+
+      window.addEventListener("offline", handleOffline);
+      window.addEventListener("online", handleOnline);
+
+      return () => {
+        window.removeEventListener("offline", handleOffline);
+        window.removeEventListener("online", handleOnline);
+      };
+    }
+  }, [router]);
+
+  if (isOffline) {
+    return <div>{children}</div>; // This will render the offline page when offline
+  }
+
   return (
     <html lang="en" className="scroll-smooth">
       <Head>
@@ -92,9 +131,10 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col">
-        <PushNotificationSubscriber />{" "}
+        <PushNotificationSubscriber />
         <header
           className={`w-full z-50 transition-all duration-300 ${
             scrolled ? "" : "bg-transparent"
