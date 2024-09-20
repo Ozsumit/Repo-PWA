@@ -291,4 +291,56 @@ export const urlMappings: {
     Grade: "12",
     subject: "Physics",
   },
+  // -------------------------------Class11-Nepali--------------------------------
+  "Bir Purkha": {
+    url: "https://drive.google.com/file/d/15elujnL0dqH_1CLjuvggm6vXytOTojZs/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Gaun Ko Maya": {
+    url: "https://drive.google.com/file/d/15ewZ8YKl1F82P_TBx7gQiqxi76hkGSpc/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Sanskriti Ko Naya Yatra": {
+    url: "https://drive.google.com/file/d/15m8JeTRz75DKaetKecCQTmfc58havl39/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  Yogmaya: {
+    url: "https://drive.google.com/file/d/15PMjXsKxq9ANFiHFvWjr81aekJgBM_yS/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Sathilai Chhithi": {
+    url: "https://drive.google.com/file/d/15xopcYfNAIq-k3OXBq3WObPJZGn8vjOc/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Tyo Feri Farkela": {
+    url: "https://drive.google.com/file/d/15p7ij-82ZUuZYVjhHFNITeL0dN8VnXQN/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+
+  "Paryaparyatan Ka Sambhawana Ra Aayam": {
+    url: "https://drive.google.com/file/d/15vQYvPA8Fxucwr21hjEutPXeGQJbjDGV/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Lau Aayo Taja  Khabar": {
+    url: "https://drive.google.com/file/d/15wleB6onnA3KIfkatBtYo6d1SvOsAZZA/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Safalata Ko Katha": {
+    url: "https://drive.google.com/file/d/15x70BuCXsmZoMmqyi4sRqE8ZfeNh-lih/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
+  "Krishishalama Ek Din": {
+    url: "https://drive.google.com/file/d/15j5bIwTUnQRkzRb2_MmiyMmP1FhdtFxP/preview",
+    Grade: "11",
+    subject: "Nepali",
+  },
 };

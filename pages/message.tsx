@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import styles from "../components/styles/contact.module.css";
 import { toast } from "sonner";
 import CompanyInfo from "../components/ui/socials";
+import { Button } from "@/components/ui/buttonmsp";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -83,7 +84,7 @@ const ContactUs: React.FC = () => {
           <form
             ref={form}
             onSubmit={sendEmail}
-            className="w-11/12  lg:w-128 z-50 shadow-[0px_0px_20px_4px_#1a202c] flex flex-col justify-center bg-black border border-white dark:border-white/[0.2] p-8 rounded-2xl"
+            className="w-11/12  lg:w-128 z-50 shadow-[0px_0px_20px_4px_#1a202c] flex flex-col justify-center bg-black border border-white dark:border-white/[0.2] p-8 rounded-2xl text-gray-950"
           >
             <div className={styles.formGroup}>
               <label className={styles.label} htmlFor="user_name">
@@ -123,8 +124,8 @@ const ContactUs: React.FC = () => {
                 placeholder="Nah, I'd win"
               />
             </div>
-            <button
-              className={`bg-accent w-6/12 self-center h-14 rounded-md text-black hover:bg-accenth hover:shadow-[0px_0px_95px_10px_#c9b4b334] transition-all duration-500 ease-linear hover:text-slate-900 ${
+            <Button
+              className={`bg-accent w-6/12 self-center h-14 rounded-md text-white hover:bg-accenth hover:shadow-[0px_0px_95px_10px_#c9b4b334] transition-all duration-500 ease-linear hover:text-gray-950 ${
                 isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
               }`}
               type="submit"
@@ -135,7 +136,7 @@ const ContactUs: React.FC = () => {
                 : isButtonDisabled
                 ? "Wait for a minute"
                 : "Send"}
-            </button>
+            </Button>
           </form>
           <CompanyInfo />
         </div>

@@ -22,16 +22,26 @@ const MyPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const toggleLessons = (subjectTitle: string) => {
+    setVisibleLessons((currentVisible) =>
+      currentVisible === subjectTitle ? null : subjectTitle
+    );
+  };
+
+  const handleCardClick = (title: string) => {
+    setCurrentIdentifier(title);
+  };
+
   const items = [
     {
       title: "Class 9",
-      description: "*Unavailable!!*",
+      description: "Unavailable!!",
       link: "##",
     },
     {
       title: "Class 10",
       description: "Available",
-      link: "../pages/class10/Nepali",
+      link: "##",
     },
     {
       title: "Class 11",
@@ -45,99 +55,79 @@ const MyPage = () => {
     },
   ];
 
-  const subs = [
-    {
-      title: "Nepali",
-      description: "Available",
-      link: "/pages/class11/Nepali",
-    },
-    {
-      title: "Java",
-      description: "Available",
-      link: "/pages/class11/Javaa",
-    },
-    {
-      title: "WMAD",
-      description: "Available",
-      link: "/pages/class11/WMAD",
-    },
-    {
-      title: "Operating System",
-      description: "Available",
-      link: "/pages/class11/OS",
-    },
-    {
-      title: "Physics",
-      description: "Available!!",
-      link: "/pages/class11/Physics",
-    },
-  ];
-
   const lessons = [
     {
-      title: "Unit1",
-      description: "Unavailable!!",
-      link: "##",
+      title: "Unit 1",
+      description: "Bir Purkha",
+      link: "#pdf",
     },
     {
-      title: "Unit2",
-      description: "Available",
-      link: "##",
+      title: "Unit 2",
+      description: "Gaun Ko Maya",
+      link: "#pdf",
     },
     {
-      title: "Unit3",
-      description: "Available",
-      link: "##",
+      title: "Unit 3",
+      description: "Sanskriti Ko Naya Yatra",
+      link: "#pdf",
     },
     {
-      title: "Unit4",
-      description: "Unavailable!!",
-      link: "##",
+      title: "Unit 4 ",
+      description: "Yogmaya",
+      link: "#pdf",
     },
     {
-      title: "Unit5",
-      description: "Unavailable!!",
-      link: "##",
+      title: "Unit 5",
+      description: "Sathilai Chhithi",
+      link: "#pdf",
     },
     {
-      title: "Unit6",
-      description: "Unavailable!!",
-      link: "##",
+      title: "Unit 6",
+      description: "Tyo Feri Farkela",
+      link: "#pdf",
     },
     {
-      title: "Unit7",
-      description: "Unavailable!!",
-      link: "##",
+      title: "Unit 7",
+      description: "Paryaparyatan Ka Sambhawana Ra Aayam",
+      link: "#pdf",
     },
     {
-      title: "Unit8",
-      description: "Unavailable!!",
-      link: "##",
+      title: "Unit 8",
+      description: "Lau Aayo Taja  Khabar",
+      link: "#pdf",
+    },
+    {
+      title: "Unit 9 ",
+      description: "Safalata Ko Katha",
+      link: "#pdf",
+    },
+    {
+      title: "Unit 10",
+      description: "Krishishalama Ek Din",
+      link: "#pdf",
     },
   ];
   const pagination = [
     { label: "Home", href: "/" },
     { label: "Class 11", href: "/class11/" },
-    // { label: "DBMS", href: "/app/pages/class10/DBMS" },
+    { label: "Nepali", href: "/app/pages/class11/Nepali" },
   ];
-
   return (
     <main>
       <div className=" h-screen rounded-md bg-black flex flex-col w-auto lg:px-28 sm:px-4 pt-2">
-        {" "}
         <div className="hero flex justify-center flex-col pt-16 w-auto">
           <Breadcrumb className=" z-10" items={pagination} />
 
           <ShootingStars />
           <StarsBackground />
           <HoverEffect
-            items={lessons}
-            className="lesson hidden"
-            // onCardClick={handleCardClick}
+            items={items}
+            className="hidden"
+            onCardClick={handleCardClick}
           />
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 rounded-5xl">
-              {[...Array(4)].map((_, index) => (
+              {[...Array(13)].map((_, index) => (
                 <Skeleton
                   key={index}
                   height={150}
@@ -149,15 +139,29 @@ const MyPage = () => {
             </div>
           ) : (
             <HoverEffect
-              items={subs}
-              className="subs "
-              // onCardClick={handleCardClick}
+              items={lessons}
+              className="lesson"
+              onCardClick={handleCardClick}
             />
           )}
+          <div
+            id="pdf"
+            className="flex justify-center items-center my-16 rounded-4xl"
+          >
+            {isLoading ? (
+              <Skeleton
+                height={400}
+                width="100%"
+                className="mb-4 rounded-7xl"
+                baseColor="#000000"
+                highlightColor="#383838"
+              />
+            ) : (
+              <Iframe identifier={currentIdentifier} />
+            )}
+          </div>
+          <Footer items={lessons} />
         </div>
-        {/* <Footer items={items} /> */}
-        <Footer items={subs} />
-
       </div>
     </main>
   );
