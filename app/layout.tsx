@@ -11,6 +11,8 @@ import { Toaster } from "sonner";
 import PulsatingButton from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { useRouter, usePathname } from "next/navigation";
+import Head from "next/head";
+import { PushNotificationSubscriber } from "@/components//ui/pushnotification";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +48,6 @@ const MobileNavItem: React.FC<NavItemProps> = ({
     } transition-colors duration-300`}
   />
 );
-
 export default function RootLayout({
   children,
 }: {
@@ -82,12 +83,15 @@ export default function RootLayout({
 
   return (
     <html lang="en" className="scroll-smooth">
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=0.1, maximum-scale=1"
-      />
-      <title>Twilight</title>
+      <Head>
+        <title>Twilight</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=0.2, maximum-scale=1"
+        />
+      </Head>
       <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col">
+        <PushNotificationSubscriber />{" "}
         <header
           className={`w-full z-50 transition-all duration-300 ${
             scrolled ? "" : "bg-transparent"
@@ -121,13 +125,11 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-
         <main className="flex-grow justify-center items-center flex-col flex pb-16 md:pb-0">
           {children}
         </main>
-
         {/* Mobile Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-white/[0.2] z-50 md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 bg-black   z-50 md:hidden">
           <Dock className="py-2 px-4">
             <DockIcon onClick={() => router.push("/")}>
               <MobileNavItem
@@ -171,7 +173,6 @@ export default function RootLayout({
             </DockIcon>
           </Dock>
         </nav>
-
         <Toaster />
       </body>
     </html>
