@@ -25,7 +25,7 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon: Icon, title }) => (
   <Link
     title={title}
     href={href}
-    className="group flex items-center space-x-10 px-4 py-2 rounded-md transition-all duration-300"
+    className="group flex items-center space-x-10 px-4 py-2 rounded-md transition-all duration-350"
   >
     <Icon
       size={30}
