@@ -82,6 +82,10 @@ export default function RootLayout({
 
   return (
     <html lang="en" className="scroll-smooth">
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=0.1, maximum-scale=1"
+      />
       <title>Twilight</title>
       <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col">
         <header
