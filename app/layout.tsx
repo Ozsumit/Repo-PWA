@@ -126,14 +126,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <Head>
-        <title>Twilight</title>
+        <title>Odyssey</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className= "bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col overflow-x-visible">
+      <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col overflow-x-visible">
         <PushNotificationSubscriber />
         <header
           className={`w-[96vw] z-50 transition-all duration-300 ${

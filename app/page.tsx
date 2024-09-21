@@ -102,7 +102,7 @@ const MyPage: React.FC = () => {
             </span>
             <span className="text-white text-lg font-bold">×</span>
             <span className="clipbg bg-gradient-to-b from-neutral-800 via-white to-white bg-clip-text text-transparent">
-              Twilight
+              Odyssey
             </span>
           </h2>
 

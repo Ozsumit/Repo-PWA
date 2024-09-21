@@ -36,7 +36,7 @@ Naming Conventions:-
 Lighthouse: Alpha build
 Aurora: Alpha.1
 Nox: Beta Build 
-Twilight: Test Build [We are here]
+Odyssey: Test Build [We are here]
 Daybreak: Feature updates
 Odessey: Test & Feature additions
 Dawn: Final Build

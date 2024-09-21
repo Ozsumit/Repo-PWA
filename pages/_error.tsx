@@ -11,7 +11,7 @@ const Error: React.FC<ErrorProps> = ({ statusCode }) => {
     <div className="min-h-screen bg-black text-white font-sans flex flex-col">
       <header className="py-6 px-4">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold">REPO Twilight</div>
+          <div className="text-2xl font-bold">REPO Odyssey</div>
           <nav>
             <ul className="flex space-x-6">
               {["Home", "Contact", "Dev", "QFind"].map((item) => (
@@ -26,7 +26,7 @@ const Error: React.FC<ErrorProps> = ({ statusCode }) => {
 
       <main className="flex-grow flex items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="text-5xl font-bold mb-8">The Repo × Twilight</h1>
+          <h1 className="text-5xl font-bold mb-8">The Repo × Odyssey</h1>
           <div className="bg-red-900 border border-red-700 rounded-lg p-6 inline-flex items-center">
             <AlertCircle className="mr-4 h-6 w-6" />
             <p className="text-xl">

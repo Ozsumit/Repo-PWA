@@ -16,7 +16,7 @@ const Footer: React.FC<FooterProps> = ({ items }) => {
     <footer className="w-[97vw] lg:w-full py-6 bg-black backdrop:blur-md pb-16 z-50 font-mono border border-white dark:border-white/[0.2] text-gray-400 p-4 rounded-lg justify-center flex flex-col items-center">
       <div className="text-center mb-4">
         <h3 className="text-lg font-semibold">
-          Explore a Universe of Knowledge with The Repo × Twilight
+          Explore a Universe of Knowledge with The Repo × Odyssey
         </h3>
         <p className="text-sm">
           Discover comprehensive study resources, from Class 9 to 12 materials,
@@ -36,7 +36,7 @@ const Footer: React.FC<FooterProps> = ({ items }) => {
         ))}
       </div>
       <div className="mt-4 text-xs">
-        &copy; {new Date().getFullYear()} The Repo × Twilight. All rights
+        &copy; {new Date().getFullYear()} The Repo × Odyssey. All rights
         reserved.
       </div>
     </footer>
