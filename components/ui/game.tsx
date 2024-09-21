@@ -119,6 +119,7 @@ const DonationClicker: React.FC = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saveState = () => {
+        console.log("Saving state to localStorage...", gameState);
         localStorage.setItem("donationClickerState", JSON.stringify(gameState));
         setSaveIndicator(true);
         setTimeout(() => setSaveIndicator(false), 1000);
@@ -129,12 +130,31 @@ const DonationClicker: React.FC = () => {
     }
   }, [gameState]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("donationClickerState");
+      if (savedState) {
+        console.log(
+          "Loaded state from localStorage...",
+          JSON.parse(savedState)
+        );
+      }
+    }
+  }, []);
+
   const handleClick = useCallback(() => {
     setGameState((prev) => ({
       ...prev,
       donations: prev.donations + prev.clickPower,
     }));
   }, []);
+
+  const saveProgress = useCallback(() => {
+    localStorage.setItem("donationClickerState", JSON.stringify(gameState));
+    setSaveIndicator(true);
+    setTimeout(() => setSaveIndicator(false), 1000);
+    console.log("Progress manually saved!");
+  }, [gameState]);
 
   const buyAutoClicker = useCallback(() => {
     setGameState((prev) => {
@@ -261,18 +281,26 @@ const DonationClicker: React.FC = () => {
         <button
           onClick={buyAutoClicker}
           disabled={gameState.donations < gameState.autoClickerCost}
-          className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+          className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
         >
-          Buy Auto-Clicker ({gameState.autoClickerCost.toLocaleString()})
+          Buy Auto-Clicker ({gameState.autoClickerCost} donations)
         </button>
+
         <button
           onClick={buyUpgrade}
           disabled={gameState.donations < gameState.upgradeCost}
-          className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50"
+          className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400"
         >
-          Upgrade Click ({gameState.upgradeCost.toLocaleString()})
+          Increase Click Power ({gameState.upgradeCost} donations)
         </button>
       </div>
+
+      <button
+        onClick={saveProgress}
+        className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mb-4"
+      >
+        Save Progress
+      </button>
 
       <div className="grid grid-cols-2 gap-2 text-left mb-4">
         {achievementsList}
