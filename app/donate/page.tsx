@@ -1,194 +1,298 @@
 "use client";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Coins, Heart, ArrowUp, Trophy, Medal, Save } from "lucide-react";
 
-import React, { useState, useEffect } from "react";
-import {
-  QrCode,
-  Heart,
-  Coffee,
-  Laptop,
-  DollarSign,
-  X,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import Image from "next/image";
-import DonationClicker from "@/components/ui/game";
-// Updated Image Collage Component
-const ImageCollage: React.FC = () => {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const images = [
-    "/images/cooked1.jpg",
-    "/images/cooked2.jpg",
-    "/images/cooked3.jpg",
-  ];
-
-  const handlePrevious = () => {
-    setSelectedImage((prev) =>
-      prev !== null ? (prev > 0 ? prev - 1 : images.length - 1) : null
-    );
-  };
-
-  const handleNext = () => {
-    setSelectedImage((prev) =>
-      prev !== null ? (prev < images.length - 1 ? prev + 1 : 0) : null
-    );
-  };
-
-  return (
-    <div className="w-full">
-      <div className="grid grid-cols-3 gap-4">
-        {images.map((src, index) => (
-          <div
-            key={index}
-            className="relative aspect-square cursor-pointer overflow-hidden rounded-lg"
-            onClick={() => setSelectedImage(index)}
-          >
-            <Image
-              src={src}
-              alt={`Image ${index + 1}`}
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-300 hover:scale-110"
-            />
-          </div>
-        ))}
-      </div>
-      {selectedImage !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="relative max-w-4xl max-h-4xl">
-            <Image
-              src={images[selectedImage]}
-              alt={`Selected Image ${selectedImage + 1}`}
-              width={800}
-              height={600}
-              objectFit="contain"
-            />
-            <button
-              className="absolute top-4 right-4 text-white bg-black bg-opacity-50 p-2 rounded-full"
-              onClick={() => setSelectedImage(null)}
-            >
-              <X size={24} />
-            </button>
-            <button
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2 rounded-full"
-              onClick={handlePrevious}
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2 rounded-full"
-              onClick={handleNext}
-            >
-              <ChevronRight size={24} />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+type Achievement = {
+  id: string;
+  name: string;
+  description: string;
+  threshold: number;
+  achieved: boolean;
 };
-const DonatePage: React.FC = () => {
-  const [showQR, setShowQR] = useState<boolean>(false);
+
+type GameState = {
+  donations: number;
+  clickPower: number;
+  autoClickerCount: number;
+  autoClickerCost: number;
+  upgradeCost: number;
+  achievements: Achievement[];
+};
+
+const initialAchievements: Achievement[] = [
+  {
+    id: "donations100",
+    name: "Generous Soul",
+    description: "Reach 100 donations",
+    threshold: 100,
+    achieved: false,
+  },
+  {
+    id: "donations1000",
+    name: "Philanthropist",
+    description: "Reach 1,000 donations",
+    threshold: 1000,
+    achieved: false,
+  },
+  {
+    id: "donations10000",
+    name: "Benefactor",
+    description: "Reach 10,000 donations",
+    threshold: 10000,
+    achieved: false,
+  },
+  {
+    id: "donations100000",
+    name: "Humanitarian",
+    description: "Reach 100,000 donations",
+    threshold: 100000,
+    achieved: false,
+  },
+  {
+    id: "autoclickers5",
+    name: "Automation Beginner",
+    description: "Have 5 auto-clickers",
+    threshold: 5,
+    achieved: false,
+  },
+  {
+    id: "autoclickers25",
+    name: "Automation Expert",
+    description: "Have 25 auto-clickers",
+    threshold: 25,
+    achieved: false,
+  },
+  {
+    id: "autoclickers100",
+    name: "Automation Master",
+    description: "Have 100 auto-clickers",
+    threshold: 100,
+    achieved: false,
+  },
+  {
+    id: "clickpower5",
+    name: "Power Donor",
+    description: "Reach click power of 5",
+    threshold: 5,
+    achieved: false,
+  },
+  {
+    id: "clickpower25",
+    name: "Super Donor",
+    description: "Reach click power of 25",
+    threshold: 25,
+    achieved: false,
+  },
+  {
+    id: "clickpower100",
+    name: "Mega Donor",
+    description: "Reach click power of 100",
+    threshold: 100,
+    achieved: false,
+  },
+];
+
+const initialGameState: GameState = {
+  donations: 0,
+  clickPower: 1,
+  autoClickerCount: 0,
+  autoClickerCost: 10,
+  upgradeCost: 50,
+  achievements: initialAchievements,
+};
+
+const DonationClicker: React.FC = () => {
+  const [gameState, setGameState] = useState<GameState>(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("donationClickerState");
+      return savedState ? JSON.parse(savedState) : initialGameState;
+    } else {
+      return initialGameState;
+    }
+  });
+
+  const [showAchievement, setShowAchievement] = useState<Achievement | null>(
+    null
+  );
+  const [saveIndicator, setSaveIndicator] = useState<boolean>(false);
 
   useEffect(() => {
-    if (showQR) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    if (typeof window !== "undefined") {
+      const saveState = () => {
+        localStorage.setItem("donationClickerState", JSON.stringify(gameState));
+        setSaveIndicator(true);
+        setTimeout(() => setSaveIndicator(false), 1000);
+      };
 
-    return () => {
-      document.body.style.overflow = "unset";
+      const saveInterval = setInterval(saveState, 30000); // Save every 30 seconds
+      return () => clearInterval(saveInterval);
+    }
+  }, [gameState]);
+
+  const handleClick = useCallback(() => {
+    setGameState((prev) => ({
+      ...prev,
+      donations: prev.donations + prev.clickPower,
+    }));
+  }, []);
+
+  const buyAutoClicker = useCallback(() => {
+    setGameState((prev) => {
+      if (prev.donations >= prev.autoClickerCost) {
+        return {
+          ...prev,
+          donations: prev.donations - prev.autoClickerCost,
+          autoClickerCount: prev.autoClickerCount + 1,
+          autoClickerCost: Math.ceil(prev.autoClickerCost * 1.79),
+        };
+      }
+      return prev;
+    });
+  }, []);
+
+  const buyUpgrade = useCallback(() => {
+    setGameState((prev) => {
+      if (prev.donations >= prev.upgradeCost) {
+        return {
+          ...prev,
+          donations: prev.donations - prev.upgradeCost,
+          clickPower: prev.clickPower + 1,
+          upgradeCost: Math.ceil(prev.upgradeCost * 1.9),
+        };
+      }
+      return prev;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const interval = setInterval(() => {
+        setGameState((prev) => ({
+          ...prev,
+          donations: prev.donations + prev.autoClickerCount,
+        }));
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [gameState.autoClickerCount]);
+
+  useEffect(() => {
+    const checkAchievements = () => {
+      const newAchievements = gameState.achievements.map((achievement) => {
+        if (!achievement.achieved) {
+          let achieved = false;
+          switch (achievement.id) {
+            case "donations100":
+            case "donations1000":
+            case "donations10000":
+            case "donations100000":
+              achieved = gameState.donations >= achievement.threshold;
+              break;
+            case "autoclickers5":
+            case "autoclickers25":
+            case "autoclickers100":
+              achieved = gameState.autoClickerCount >= achievement.threshold;
+              break;
+            case "clickpower5":
+            case "clickpower25":
+            case "clickpower100":
+              achieved = gameState.clickPower >= achievement.threshold;
+              break;
+          }
+          if (achieved) {
+            setShowAchievement(achievement);
+            setTimeout(() => setShowAchievement(null), 3000);
+            return { ...achievement, achieved: true };
+          }
+        }
+        return achievement;
+      });
+
+      if (
+        JSON.stringify(newAchievements) !==
+        JSON.stringify(gameState.achievements)
+      ) {
+        setGameState((prev) => ({ ...prev, achievements: newAchievements }));
+      }
     };
-  }, [showQR]);
+    checkAchievements();
+  }, [gameState]);
+
+  const achievementsList = useMemo(
+    () =>
+      gameState.achievements.map((achievement) => (
+        <div
+          key={achievement.id}
+          className={`p-2 rounded ${
+            achievement.achieved ? "bg-yellow-200" : "bg-gray-200"
+          }`}
+          title={achievement.description}
+        >
+          <Trophy
+            className={`inline mr-1 ${
+              achievement.achieved ? "text-yellow-500" : "text-gray-500"
+            }`}
+          />
+          {achievement.name}
+        </div>
+      )),
+    [gameState.achievements]
+  );
 
   return (
-    <div
-      className={`min-h-screen bg-black text-white flex flex-col w-auto px-4 lg:px-28 pt-2 ${
-        showQR ? "overflow-hidden" : ""
-      }`}
-    >
-      <div
-        className={`flex justify-center flex-col lg:pt-16 sm:pt-0 w-auto ${
-          showQR ? "blur-sm" : ""
-        }`}
-      >
-        <h2 className="text-4xl md:text-6xl text-center font-bold mb-8 animate-pulse">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-            Support Our Cause
-          </span>
-        </h2>
+    <div className="md:w-144 w-[90vw] mx-auto p-4 bg-black border-2 border-accent rounded-lg shadow-md text-center">
+      <h1 className="text-3xl font-bold mb-4 text-blue-600">
+        Donation Clicker
+      </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
-          <div className="w-full backdrop-blur-md mb-4 border border-white/20 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h3 className="font-bold text-white text-2xl mb-4 flex items-center">
-              <Laptop className="mr-2" /> Urgent Appeal
-            </h3>
-            <p className="text-pretty mb-6">
-              Dear amazing supporters! My trusty laptop has decided to retire
-              early, leaving me in a digital pickle. As I can't afford a new one
-              right now, I'm reaching out to you wonderful folks for a helping
-              hand. If you've enjoyed your time here or appreciate the work put
-              into this site, consider contributing to help me get back on
-              track. Your generosity, big or small, means the world to me! 🌟
-            </p>
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              <button
-                onClick={() => setShowQR(true)}
-                className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white font-bold py-2 px-4 rounded inline-flex items-center transition-all duration-300 ease-in-out transform hover:scale-105"
-              >
-                <QrCode className="mr-2" />
-                Donate with QR Code
-              </button>
-              <p className="text-sm italic">Current setup: Borrowed device</p>
-            </div>
-          </div>
-
-          <ImageCollage />
-        </div>
-
-        <DonationClicker />
-
-        {/* Ad Placeholder coponent remains unchanged */}
+      <div className="text-4xl font-bold mb-4">
+        <Coins className="inline mr-2 text-yellow-500" />
+        {gameState.donations.toLocaleString()} Donations
       </div>
 
-      {showQR && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-8 rounded-lg items-center justify-center flex flex-col max-w-md w-full">
-            <h2 className="text-3xl font-bold mb-6 text-white">
-              Scan to Donate
-            </h2>
-            <div className="relative">
-              <Image
-                src="/images/qr.jpg"
-                alt="QR Code"
-                width={250}
-                height={250}
-                objectFit="cover"
-                className="mx-auto rounded-lg shadow-lg"
-              />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 rounded-lg">
-                <p className="text-white text-center p-4">
-                  Thank you for your support!
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowQR(false)}
-              className="mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
-            >
-              Close
-            </button>
-            <div className="mt-6 text-center">
-              <p className="font-semibold">Alternative Contact:</p>
-              <p>Phone: 9842134149</p>
-              <p>Email: Pokhrelsumit36@gmail.com</p>
-            </div>
-          </div>
+      <button
+        onClick={handleClick}
+        className="w-full py-4 px-6 mb-4 bg-green-500 text-white text-xl font-bold rounded-lg hover:bg-green-600 transition-colors"
+      >
+        Donate!
+      </button>
+
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <button
+          onClick={buyAutoClicker}
+          disabled={gameState.donations < gameState.autoClickerCost}
+          className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+        >
+          Buy Auto-Clicker ({gameState.autoClickerCost.toLocaleString()})
+        </button>
+        <button
+          onClick={buyUpgrade}
+          disabled={gameState.donations < gameState.upgradeCost}
+          className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50"
+        >
+          Upgrade Click ({gameState.upgradeCost.toLocaleString()})
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 text-left mb-4">
+        {achievementsList}
+      </div>
+
+      {showAchievement && (
+        <div className="absolute bottom-4 left-4 p-4 bg-yellow-500 text-black rounded-lg shadow-lg animate-bounce">
+          <Medal className="inline mr-2 text-yellow-600" />
+          {showAchievement.name}
+        </div>
+      )}
+
+      {saveIndicator && (
+        <div className="absolute bottom-4 right-4 p-2 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg">
+          <Save className="inline mr-2 text-green-600" />
+          Progress Saved!
         </div>
       )}
     </div>
   );
 };
 
-export default DonatePage;
+export default DonationClicker;
