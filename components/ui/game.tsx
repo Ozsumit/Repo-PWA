@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Coins, Heart, ArrowUp, Trophy, Medal, Save } from "lucide-react";
 
@@ -102,8 +103,12 @@ const initialGameState: GameState = {
 
 const DonationClicker: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(() => {
-    const savedState = localStorage.getItem("donationClickerState");
-    return savedState ? JSON.parse(savedState) : initialGameState;
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("donationClickerState");
+      return savedState ? JSON.parse(savedState) : initialGameState;
+    } else {
+      return initialGameState;
+    }
   });
 
   const [showAchievement, setShowAchievement] = useState<Achievement | null>(
@@ -112,14 +117,16 @@ const DonationClicker: React.FC = () => {
   const [saveIndicator, setSaveIndicator] = useState<boolean>(false);
 
   useEffect(() => {
-    const saveState = () => {
-      localStorage.setItem("donationClickerState", JSON.stringify(gameState));
-      setSaveIndicator(true);
-      setTimeout(() => setSaveIndicator(false), 1000);
-    };
+    if (typeof window !== "undefined") {
+      const saveState = () => {
+        localStorage.setItem("donationClickerState", JSON.stringify(gameState));
+        setSaveIndicator(true);
+        setTimeout(() => setSaveIndicator(false), 1000);
+      };
 
-    const saveInterval = setInterval(saveState, 10000); // Save every 30 seconds
-    return () => clearInterval(saveInterval);
+      const saveInterval = setInterval(saveState, 30000); // Save every 30 seconds
+      return () => clearInterval(saveInterval);
+    }
   }, [gameState]);
 
   const handleClick = useCallback(() => {
@@ -136,7 +143,7 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.autoClickerCost,
           autoClickerCount: prev.autoClickerCount + 1,
-          autoClickerCost: Math.ceil(prev.autoClickerCost * 1.57),
+          autoClickerCost: Math.ceil(prev.autoClickerCost * 1.79),
         };
       }
       return prev;
@@ -150,7 +157,7 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.upgradeCost,
           clickPower: prev.clickPower + 1,
-          upgradeCost: Math.ceil(prev.upgradeCost * 1.7),
+          upgradeCost: Math.ceil(prev.upgradeCost * 1.9),
         };
       }
       return prev;
@@ -158,13 +165,15 @@ const DonationClicker: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setGameState((prev) => ({
-        ...prev,
-        donations: prev.donations + prev.autoClickerCount,
-      }));
-    }, 1000);
-    return () => clearInterval(interval);
+    if (typeof window !== "undefined") {
+      const interval = setInterval(() => {
+        setGameState((prev) => ({
+          ...prev,
+          donations: prev.donations + prev.autoClickerCount,
+        }));
+      }, 1000);
+      return () => clearInterval(interval);
+    }
   }, [gameState.autoClickerCount]);
 
   useEffect(() => {
@@ -265,31 +274,19 @@ const DonationClicker: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex justify-between text-lg mb-4">
-        <div>
-          <Heart className="inline mr-1 text-red-500" />
-          Auto-Clickers: {gameState.autoClickerCount}
-        </div>
-        <div>
-          <ArrowUp className="inline mr-1 text-purple-500" />
-          Click Power: {gameState.clickPower}
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <h2 className="text-xl font-bold mb-2">Achievements</h2>
-        <div className="grid grid-cols-2 gap-2">{achievementsList}</div>
+      <div className="grid grid-cols-2 gap-2 text-left mb-4">
+        {achievementsList}
       </div>
 
       {showAchievement && (
-        <div className="fixed bottom-4 right-4 bg-yellow-300 p-4 rounded-lg shadow-lg">
+        <div className="absolute bottom-4 left-4 p-4 bg-yellow-500 text-black rounded-lg shadow-lg animate-bounce">
           <Medal className="inline mr-2 text-yellow-600" />
-          Achievement Unlocked: {showAchievement.name}!
+          {showAchievement.name}
         </div>
       )}
 
       {saveIndicator && (
-        <div className="fixed top-4 right-4 bg-green-300 p-2 rounded-lg shadow-lg">
+        <div className="absolute bottom-4 right-4 p-2 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg">
           <Save className="inline mr-2 text-green-600" />
           Progress Saved!
         </div>
