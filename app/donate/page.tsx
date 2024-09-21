@@ -139,7 +139,9 @@ const DonatePage: React.FC = () => {
                 <QrCode className="mr-2" />
                 Donate with QR Code
               </button>
-              <p className="text-sm italic">Current setup: Borrowed device</p>
+              <p className="text-sm italic">
+                Current setup: Half Dead Laptop Connected to Family TV
+              </p>
             </div>
           </div>
 

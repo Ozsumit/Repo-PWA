@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Coins, Heart, ArrowUp, Trophy, Medal, Save } from "lucide-react";
+import { Coins, Heart, Trophy, Medal, Save, Clock, Zap } from "lucide-react";
 
 type Achievement = {
   id: string;
@@ -52,7 +52,7 @@ const initialAchievements: Achievement[] = [
   },
   {
     id: "autoclickers5",
-    name: "Automation Beginner",
+    name: "Booming Business",
     description: "Have 5 auto-clickers",
     threshold: 5,
     achieved: false,
@@ -66,7 +66,7 @@ const initialAchievements: Achievement[] = [
   },
   {
     id: "autoclickers100",
-    name: "Automation Master",
+    name: "Elon Musk",
     description: "Have 100 auto-clickers",
     threshold: 100,
     achieved: false,
@@ -115,31 +115,23 @@ const DonationClicker: React.FC = () => {
     }
   });
 
-  const [showAchievement, setShowAchievement] = useState<Achievement | null>(null);
+  const [showAchievement, setShowAchievement] = useState<Achievement | null>(
+    null
+  );
   const [saveIndicator, setSaveIndicator] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saveState = () => {
-        console.log("Saving state to localStorage...", gameState);
         localStorage.setItem("donationClickerState", JSON.stringify(gameState));
         setSaveIndicator(true);
         setTimeout(() => setSaveIndicator(false), 1000);
       };
 
-      const saveInterval = setInterval(saveState, 10000); // Save every 30 seconds
+      const saveInterval = setInterval(saveState, 15000); // Save every 15 seconds
       return () => clearInterval(saveInterval);
     }
   }, [gameState]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedState = localStorage.getItem("donationClickerState");
-      if (savedState) {
-        console.log("Loaded state from localStorage...", JSON.parse(savedState));
-      }
-    }
-  }, []);
 
   const handleClick = useCallback(() => {
     setGameState((prev) => ({
@@ -152,7 +144,6 @@ const DonationClicker: React.FC = () => {
     localStorage.setItem("donationClickerState", JSON.stringify(gameState));
     setSaveIndicator(true);
     setTimeout(() => setSaveIndicator(false), 1000);
-    console.log("Progress manually saved!");
   }, [gameState]);
 
   const buyAutoClicker = useCallback(() => {
@@ -162,7 +153,7 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.autoClickerCost,
           autoClickerCount: prev.autoClickerCount + 1,
-          autoClickerCost: Math.ceil(prev.autoClickerCost * 1.79),
+          autoClickerCost: Math.ceil(prev.autoClickerCost * 1.5),
           autoClickerLevel: prev.autoClickerCount + 1,
         };
       }
@@ -177,7 +168,7 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.upgradeCost,
           clickPower: prev.clickPower + 1,
-          upgradeCost: Math.ceil(prev.upgradeCost * 1.8),
+          upgradeCost: Math.ceil(prev.upgradeCost * 1.7),
           upgradeLevel: prev.upgradeLevel + 1,
         };
       }
@@ -244,14 +235,14 @@ const DonationClicker: React.FC = () => {
       gameState.achievements.map((achievement) => (
         <div
           key={achievement.id}
-          className={`p-2 rounded ${
-            achievement.achieved ? "bg-yellow-200" : "bg-gray-200"
+          className={`p-2 rounded border-gray-500 border-[1px] ${
+            achievement.achieved ? "bg-accenth" : "bg-black"
           }`}
           title={achievement.description}
         >
           <Trophy
             className={`inline mr-1 ${
-              achievement.achieved ? "text-yellow-500" : "text-gray-500"
+              achievement.achieved ? "text-yellow-400" : "text-gray-500"
             }`}
           />
           {achievement.name}
@@ -262,18 +253,20 @@ const DonationClicker: React.FC = () => {
 
   return (
     <div className="md:w-144 w-[90vw] mx-auto p-4 bg-black border-2 border-accent rounded-lg shadow-md text-center">
-      <h1 className="text-3xl font-bold mb-4 text-blue-600">Donation Clicker</h1>
+      <h1 className="text-3xl font-bold mb-4 text-blue-600">
+        Donation Clicker
+      </h1>
 
       <div className="text-4xl font-bold mb-4">
         <Coins className="inline mr-2 text-yellow-500" />
-        {gameState.donations.toLocaleString()} Donations
+        {gameState.donations.toLocaleString()}
       </div>
 
       <button
         onClick={handleClick}
         className="w-full py-4 px-6 mb-4 bg-green-500 text-white text-xl font-bold rounded-lg hover:bg-green-600 transition-colors"
       >
-        Donate!
+        <Heart className="inline mr-2" /> Donate!
       </button>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
@@ -282,7 +275,7 @@ const DonationClicker: React.FC = () => {
           disabled={gameState.donations < gameState.autoClickerCost}
           className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
         >
-          Buy Auto-Clicker ({gameState.autoClickerCost} donations)
+          <Clock className="inline mr-2 " /> {gameState.autoClickerCost}
         </button>
 
         <button
@@ -290,24 +283,25 @@ const DonationClicker: React.FC = () => {
           disabled={gameState.donations < gameState.upgradeCost}
           className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400"
         >
-          Increase Click Power ({gameState.upgradeCost} donations)
+          <Zap className="inline mr-2" /> {gameState.upgradeCost}
         </button>
       </div>
 
-      <div className="text-xl mb-4">
-        <div className="mb-2">
-          <strong>Auto-Clicker Level:</strong> {gameState.autoClickerLevel}
+      <div className="text-xl mb-4 flex justify-around">
+        <div>
+          <Clock className="inline mr-2 text-orange-500" />{" "}
+          {gameState.autoClickerLevel}
         </div>
         <div>
-          <strong>Upgrade Level:</strong> {gameState.upgradeLevel}
+          <Zap className="inline mr-2 text-orange-500" /> {gameState.clickPower}
         </div>
       </div>
 
       <button
         onClick={saveProgress}
-        className="w-6/12 py-2 px-4 bg-accent text-white rounded-lg hover:bg-blue-600 transition-colors mb-4"
+        className="w-6/12 py-2 px-4 mb-4 bg-grays text-white rounded-lg hover:bg-blue-600 transition-colors"
       >
-        Save Progress
+        <Save className="inline mr-2" /> Save
       </button>
 
       <div className="grid grid-cols-2 gap-2 text-left mb-4">
@@ -324,7 +318,7 @@ const DonationClicker: React.FC = () => {
       {saveIndicator && (
         <div className="absolute bottom-4 right-4 p-2 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg">
           <Save className="inline mr-2 text-green-600" />
-          Progress Saved!
+          Saved!
         </div>
       )}
     </div>
