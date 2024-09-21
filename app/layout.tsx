@@ -172,7 +172,7 @@ export default function RootLayout({
           {children}
         </main>
         {/* Mobile Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-black   z-50 md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 bg-black border-top-1  z-50 md:hidden">
           <Dock className="py-2 px-4">
             <DockIcon onClick={() => router.push("/")}>
               <MobileNavItem
