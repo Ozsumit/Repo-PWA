@@ -20,9 +20,6 @@ const ImageCollage: React.FC = () => {
     "/images/cooked1.jpg",
     "/images/cooked2.jpg",
     "/images/cooked3.jpg",
-    "/images/cooked4.jpg",
-    "/images/cooked5.jpg",
-    "/images/cooked6.jpg",
   ];
 
   const handlePrevious = () => {
