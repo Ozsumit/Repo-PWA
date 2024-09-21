@@ -133,15 +133,15 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col">
+      <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col overflow-x-visible">
         <PushNotificationSubscriber />
         <header
-          className={`w-full z-50 transition-all duration-300 ${
+          className={`w-[96vw] z-50 transition-all duration-300 ${
             scrolled ? "" : "bg-transparent"
           }`}
         >
-          <div className="navigation flex flex-row justify-center items-center w-[96vw] mx-0">
-            <div className="flex w-[97vw] lg:justify-between justify-between items-center py-4">
+          <div className="navigation flex flex-row justify-center items-center w-[95vw] mx-0">
+            <div className="flex w-[96vw] lg:justify-between justify-between items-center py-4">
               <Link href="/" className="flex items-center">
                 <Image width={100} height={100} src={logo} alt="Logo" />
               </Link>
@@ -168,11 +168,11 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-        <main className="flex-grow justify-center items-center flex-col flex pb-16 md:pb-0">
+        <main className="flex-grow justify-center items-center flex-col flex pb-16  md:pb-0">
           {children}
         </main>
         {/* Mobile Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-black   z-50 md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 bg-black   border-t-[1px] border-t-white/[0.2][#294c83] z-50 md:hidden">
           <Dock className="py-2 px-4">
             <DockIcon onClick={() => router.push("/")}>
               <MobileNavItem
