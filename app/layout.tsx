@@ -133,7 +133,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col overflow-x-visible">
+      <body className= "bg-black text-white min-h-screen mx-4 lg:mx-0 flex flex-col overflow-x-visible">
         <PushNotificationSubscriber />
         <header
           className={`w-[96vw] z-50 transition-all duration-300 ${
