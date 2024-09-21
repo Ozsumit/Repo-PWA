@@ -17,6 +17,8 @@ type GameState = {
   autoClickerCost: number;
   upgradeCost: number;
   achievements: Achievement[];
+  upgradeLevel: number;
+  autoClickerLevel: number;
 };
 
 const initialAchievements: Achievement[] = [
@@ -99,6 +101,8 @@ const initialGameState: GameState = {
   autoClickerCost: 10,
   upgradeCost: 50,
   achievements: initialAchievements,
+  upgradeLevel: 0,
+  autoClickerLevel: 0,
 };
 
 const DonationClicker: React.FC = () => {
@@ -111,9 +115,7 @@ const DonationClicker: React.FC = () => {
     }
   });
 
-  const [showAchievement, setShowAchievement] = useState<Achievement | null>(
-    null
-  );
+  const [showAchievement, setShowAchievement] = useState<Achievement | null>(null);
   const [saveIndicator, setSaveIndicator] = useState<boolean>(false);
 
   useEffect(() => {
@@ -125,7 +127,7 @@ const DonationClicker: React.FC = () => {
         setTimeout(() => setSaveIndicator(false), 1000);
       };
 
-      const saveInterval = setInterval(saveState, 30000); // Save every 30 seconds
+      const saveInterval = setInterval(saveState, 10000); // Save every 30 seconds
       return () => clearInterval(saveInterval);
     }
   }, [gameState]);
@@ -134,10 +136,7 @@ const DonationClicker: React.FC = () => {
     if (typeof window !== "undefined") {
       const savedState = localStorage.getItem("donationClickerState");
       if (savedState) {
-        console.log(
-          "Loaded state from localStorage...",
-          JSON.parse(savedState)
-        );
+        console.log("Loaded state from localStorage...", JSON.parse(savedState));
       }
     }
   }, []);
@@ -164,6 +163,7 @@ const DonationClicker: React.FC = () => {
           donations: prev.donations - prev.autoClickerCost,
           autoClickerCount: prev.autoClickerCount + 1,
           autoClickerCost: Math.ceil(prev.autoClickerCost * 1.79),
+          autoClickerLevel: prev.autoClickerCount + 1,
         };
       }
       return prev;
@@ -177,7 +177,8 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.upgradeCost,
           clickPower: prev.clickPower + 1,
-          upgradeCost: Math.ceil(prev.upgradeCost * 1.9),
+          upgradeCost: Math.ceil(prev.upgradeCost * 1.8),
+          upgradeLevel: prev.upgradeLevel + 1,
         };
       }
       return prev;
@@ -261,9 +262,7 @@ const DonationClicker: React.FC = () => {
 
   return (
     <div className="md:w-144 w-[90vw] mx-auto p-4 bg-black border-2 border-accent rounded-lg shadow-md text-center">
-      <h1 className="text-3xl font-bold mb-4 text-blue-600">
-        Donation Clicker
-      </h1>
+      <h1 className="text-3xl font-bold mb-4 text-blue-600">Donation Clicker</h1>
 
       <div className="text-4xl font-bold mb-4">
         <Coins className="inline mr-2 text-yellow-500" />
@@ -295,9 +294,18 @@ const DonationClicker: React.FC = () => {
         </button>
       </div>
 
+      <div className="text-xl mb-4">
+        <div className="mb-2">
+          <strong>Auto-Clicker Level:</strong> {gameState.autoClickerLevel}
+        </div>
+        <div>
+          <strong>Upgrade Level:</strong> {gameState.upgradeLevel}
+        </div>
+      </div>
+
       <button
         onClick={saveProgress}
-        className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mb-4"
+        className="w-6/12 py-2 px-4 bg-accent text-white rounded-lg hover:bg-blue-600 transition-colors mb-4"
       >
         Save Progress
       </button>
