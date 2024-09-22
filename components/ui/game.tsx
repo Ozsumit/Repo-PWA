@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { Coins, Heart, Trophy, Medal, Save, Clock, Zap } from "lucide-react";
 
 type Achievement = {
@@ -120,18 +126,28 @@ const DonationClicker: React.FC = () => {
   );
   const [saveIndicator, setSaveIndicator] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saveState = () => {
-        localStorage.setItem("donationClickerState", JSON.stringify(gameState));
-        setSaveIndicator(true);
-        setTimeout(() => setSaveIndicator(false), 1000);
-      };
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
 
-      const saveInterval = setInterval(saveState, 15000); // Save every 15 seconds
-      return () => clearInterval(saveInterval);
+  const saveProgress = useCallback(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("donationClickerState", JSON.stringify(gameState));
+      setSaveIndicator(true);
+      setTimeout(() => setSaveIndicator(false), 1000);
     }
   }, [gameState]);
+
+  // New useEffect for automatic clicking of the save button every 10 seconds
+  useEffect(() => {
+    const autoClickSave = () => {
+      if (saveButtonRef.current) {
+        saveButtonRef.current.click();
+      }
+    };
+
+    const autoClickInterval = setInterval(autoClickSave, 10000); // Click save every 10 seconds
+
+    return () => clearInterval(autoClickInterval);
+  }, []);
 
   const handleClick = useCallback(() => {
     setGameState((prev) => ({
@@ -139,12 +155,6 @@ const DonationClicker: React.FC = () => {
       donations: prev.donations + prev.clickPower,
     }));
   }, []);
-
-  const saveProgress = useCallback(() => {
-    localStorage.setItem("donationClickerState", JSON.stringify(gameState));
-    setSaveIndicator(true);
-    setTimeout(() => setSaveIndicator(false), 1000);
-  }, [gameState]);
 
   const buyAutoClicker = useCallback(() => {
     setGameState((prev) => {
@@ -298,6 +308,7 @@ const DonationClicker: React.FC = () => {
       </div>
 
       <button
+        ref={saveButtonRef}
         onClick={saveProgress}
         className="w-6/12 py-2 px-4 mb-4 bg-grays text-white rounded-lg hover:bg-blue-600 transition-colors"
       >
