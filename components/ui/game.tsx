@@ -144,7 +144,7 @@ const DonationClicker: React.FC = () => {
       }
     };
 
-    const autoClickInterval = setInterval(autoClickSave, 10000); // Click save every 10 seconds
+    const autoClickInterval = setInterval(autoClickSave, 5000); // Click save every 10 seconds
 
     return () => clearInterval(autoClickInterval);
   }, []);
@@ -327,7 +327,7 @@ const DonationClicker: React.FC = () => {
       )}
 
       {saveIndicator && (
-        <div className="absolute bottom-4 right-4 p-2 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg">
+        <div className="absolute hidden bottom-4 right-4 p-2 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg">
           <Save className="inline mr-2 text-green-600" />
           Saved!
         </div>
