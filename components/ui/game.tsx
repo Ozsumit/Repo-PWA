@@ -24,6 +24,7 @@ type SpecialItem = {
   cost: number;
   effect: (state: GameState) => Partial<GameState>;
   icon: React.ReactNode;
+  duration: number;
 };
 
 type GameState = {
@@ -33,7 +34,6 @@ type GameState = {
   autoClickerCost: number;
   upgradeCost: number;
   autoClickerby: number;
-
   clickPowerby: number;
   achievements: Achievement[];
   upgradeLevel: number;
@@ -42,6 +42,13 @@ type GameState = {
   luckyCharmActive: boolean;
   donationMultiplierClicks: number;
   frostBonusActive: boolean;
+  timeWarpActive: boolean;
+  rainbowBoostActive: boolean;
+  superNovaActive: boolean;
+  specialItemBonus: {
+    clickPower: number;
+    autoClickerPower: number;
+  };
 };
 
 const initialAchievements: Achievement[] = [
@@ -158,7 +165,6 @@ const initialAchievements: Achievement[] = [
     icon: <LucideIcons.Gift />,
   },
 ];
-
 const specialItems: SpecialItem[] = [
   {
     id: "goldenHeart",
@@ -167,38 +173,68 @@ const specialItems: SpecialItem[] = [
     cost: 10000,
     effect: (state) => ({ clickPower: state.clickPower * 2 }),
     icon: <LucideIcons.Heart color="gold" />,
+    duration: 30000,
   },
   {
     id: "luckyCharm",
     name: "Lucky Charm",
     description: "20% chance to get double donations for 1 minute",
     cost: 1000,
-    effect: (state) => ({ donations: state.donations }),
+    effect: (state) => ({ luckyCharmActive: true }),
     icon: <LucideIcons.Sparkles color="green" />,
+    duration: 60000,
   },
   {
     id: "timeWarp",
     name: "Time Warp",
-    description: "Doubles auto-clicker power for 1 minute",
-    cost: 5000,
-    effect: (state) => ({ autoClickerCount: state.autoClickerCount * 10 }),
+    description: "Triples auto-clicker power for 1 minute",
+    cost: 7000,
+    effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
+    duration: 60000,
   },
   {
     id: "donationMultiplier",
     name: "Donation Multiplier",
     description: "Triples your donations for the next 20 clicks",
     cost: 7000,
-    effect: (state) => ({ donations: state.donations * 3 }),
+    effect: (state) => ({ donationMultiplierClicks: 20 }),
     icon: <LucideIcons.Target color="purple" />,
+    duration: 0,
   },
   {
     id: "frostBonus",
     name: "Frost Bonus",
     description: "Freezes auto-clicker cost increase for 2 minutes",
-    cost: 5000,
-    effect: (state) => ({ autoClickerCost: state.autoClickerCost }),
+    cost: 10000,
+    effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
+    duration: 120000,
+  },
+  {
+    id: "powerSurge",
+    name: "Power Surge",
+    description: "Increases click power by 150% for 45 seconds",
+    cost: 15000,
+    effect: (state) => ({ clickPower: state.clickPower * 3 }),
+    icon: <LucideIcons.Zap color="yellow" />,
+    duration: 50000,
+  },
+  {
+    id: "autoBoost",
+    name: "Auto Boost",
+    description: "Increases auto-clicker efficiency by 25% for 2 minutes",
+    cost: 20000,
+    effect: (state) => ({
+      autoClickerBoostActive: true, // Keep this property
+      // Add other properties from GameState here, even if they are not modified
+      donations: state.donations,
+      clickPower: state.clickPower,
+      autoClickerCount: state.autoClickerCount * 8,
+      // ... and so on for all properties in GameState
+    }),
+    icon: <LucideIcons.Cpu color="orange" />,
+    duration: 120000,
   },
 ];
 
@@ -217,6 +253,13 @@ const initialGameState: GameState = {
   luckyCharmActive: false,
   donationMultiplierClicks: 0,
   frostBonusActive: false,
+  timeWarpActive: false,
+  rainbowBoostActive: false,
+  superNovaActive: false,
+  specialItemBonus: {
+    clickPower: 0,
+    autoClickerPower: 0,
+  },
 };
 // Custom hook that handles input logic and button visibility
 const useRevealButtons = (keywords: string[]) => {
@@ -288,6 +331,9 @@ const DonationClicker: React.FC = () => {
       if (prev.donationMultiplierClicks > 0) {
         donationIncrease *= 3;
       }
+      if (prev.rainbowBoostActive) {
+        donationIncrease *= 1.5;
+      }
       return {
         ...prev,
         donations: prev.donations + donationIncrease,
@@ -298,44 +344,7 @@ const DonationClicker: React.FC = () => {
       };
     });
   }, []);
-  const addaura = useCallback(() => {
-    setGameState((prev) => {
-      let donationIncrease = prev.clickPower;
-      if (prev.luckyCharmActive && Math.random() < 0.2) {
-        donationIncrease *= 10000000;
-      }
-      if (prev.donationMultiplierClicks > 0) {
-        donationIncrease *= 10000000;
-      }
-      return {
-        ...prev,
-        donations: prev.donations * 100,
-        donationMultiplierClicks: Math.max(
-          0,
-          prev.donationMultiplierClicks - 100
-        ),
-      };
-    });
-  }, []);
-  const minusaura = useCallback(() => {
-    setGameState((prev) => {
-      let donationIncrease = prev.clickPower;
-      if (prev.luckyCharmActive && Math.random() < 0.2) {
-        donationIncrease *= 10000000;
-      }
-      if (prev.donationMultiplierClicks > 0) {
-        donationIncrease *= 10000000;
-      }
-      return {
-        ...prev,
-        donations: prev.donations / 100,
-        donationMultiplierClicks: Math.max(
-          0,
-          prev.donationMultiplierClicks - 100
-        ),
-      };
-    });
-  }, []);
+
   const buyAutoClicker = useCallback(() => {
     setGameState((prev) => {
       if (prev.donations >= prev.autoClickerCost) {
@@ -355,6 +364,12 @@ const DonationClicker: React.FC = () => {
       return prev;
     });
   }, []);
+  const formatTime = (ms: number) => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   const buyUpgrade = useCallback(() => {
     setGameState((prev) => {
@@ -380,13 +395,12 @@ const DonationClicker: React.FC = () => {
           donations: prev.donations - item.cost,
           ...item.effect(prev),
         };
-        if (item.id === "frostBonus") {
-          newState.frostBonusActive = true;
+        if (item.duration > 0) {
+          setActiveItems((prevItems) => ({
+            ...prevItems,
+            [item.id]: Date.now() + item.duration,
+          }));
         }
-        setActiveItems((prevItems) => ({
-          ...prevItems,
-          [item.id]: Date.now() + (item.id === "timeWarp" ? 30000 : 60000),
-        }));
         toast.success(`Activated: ${item.name}`, {
           description: item.description,
           icon: item.icon,
@@ -400,14 +414,27 @@ const DonationClicker: React.FC = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const interval = setInterval(() => {
-        setGameState((prev) => ({
-          ...prev,
-          donations: prev.donations + prev.autoClickerCount,
-        }));
+        setGameState((prev) => {
+          let autoClickerIncrease = prev.autoClickerCount;
+          if (prev.timeWarpActive) {
+            autoClickerIncrease *= 3;
+          }
+          if (prev.rainbowBoostActive) {
+            autoClickerIncrease *= 1.5;
+          }
+          return {
+            ...prev,
+            donations: prev.donations + autoClickerIncrease,
+          };
+        });
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [gameState.autoClickerCount]);
+  }, [
+    gameState.autoClickerCount,
+    gameState.timeWarpActive,
+    gameState.rainbowBoostActive,
+  ]);
 
   useEffect(() => {
     const checkAchievements = () => {
@@ -457,7 +484,6 @@ const DonationClicker: React.FC = () => {
     };
     checkAchievements();
   }, [gameState, activeItems]);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveItems((prevItems) => {
@@ -471,19 +497,14 @@ const DonationClicker: React.FC = () => {
                 switch (id) {
                   case "goldenHeart":
                     return { ...prev, clickPower: prev.clickPower / 2 };
-                  case "timeWarp":
-                    return {
-                      ...prev,
-                      autoClickerCount: prev.autoClickerCount / 2,
-                    };
                   case "luckyCharm":
-                  case "donationMultiplier":
+                    return { ...prev, luckyCharmActive: false };
+                  case "timeWarp":
+                    return { ...prev, timeWarpActive: false };
                   case "frostBonus":
-                    return {
-                      ...prev,
-                      luckyCharmActive: false,
-                      frostBonusActive: false,
-                    };
+                    return { ...prev, frostBonusActive: false };
+                  case "rainbowBoost":
+                    return { ...prev, rainbowBoostActive: false };
                 }
               }
               return prev;
@@ -497,120 +518,168 @@ const DonationClicker: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const addaura = useCallback(() => {
+    setGameState((prev) => {
+      let donationIncrease = prev.clickPower;
+      if (prev.luckyCharmActive && Math.random() < 0.2) {
+        donationIncrease *= 10000000;
+      }
+      if (prev.donationMultiplierClicks > 0) {
+        donationIncrease *= 10000000;
+      }
+      return {
+        ...prev,
+        donations: prev.donations * 100,
+        donationMultiplierClicks: Math.max(
+          0,
+          prev.donationMultiplierClicks - 100
+        ),
+      };
+    });
+  }, []);
+  const minusaura = useCallback(() => {
+    setGameState((prev) => {
+      let donationIncrease = prev.clickPower;
+      if (prev.luckyCharmActive && Math.random() < 0.2) {
+        donationIncrease *= 10000000;
+      }
+      if (prev.donationMultiplierClicks > 0) {
+        donationIncrease *= 10000000;
+      }
+      return {
+        ...prev,
+        donations: prev.donations / 100,
+        donationMultiplierClicks: Math.max(
+          0,
+          prev.donationMultiplierClicks - 100
+        ),
+      };
+    });
+  }, []);
   const { inputValue, setInputValue, shouldShowButtons, handleSubmit } =
     useRevealButtons(["imalazyass", "imthedeveloper", "imthedevsgf"]);
   return (
-    <div className="flex flex-col justify-center items-center text-center">
-      <h1 className="text-4xl font-mono w-[90vw] lg:w-144 justify-center  items-center flex flex-col mb-12 font-bold ">
+    <div className="flex flex-col justify-center items-center text-center p-4">
+      <h1 className="text-2xl md:text-4xl font-mono w-full md:w-144 justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
         Beat the high score of
-        <span className="text-yellow-400  flex items-center">
-          <LucideIcons.Coins className="text-yellow-400" size={44} />
+        <span className="text-yellow-400 flex items-center">
+          <LucideIcons.Coins className="text-yellow-400" />
           1245617869
         </span>
         to get free lunch
-      </h1>{" "}
-      <div className="bg-black p-4 rounded-lg shadow-lg w-[90vw] lg:w-144 text-white mx-auto border-2 border-accenth">
+      </h1>
+      <div className="bg-black p-4 rounded-lg shadow-lg w-full md:w-144 text-white mx-auto border-2 border-accenth">
         {/* Top Section with Coins and Donations */}
         <div className="flex justify-center text-center mb-4">
           <div className="mr-4 flex items-center space-x-2">
-            <LucideIcons.Coins className="text-yellow-400" size={44} />
-            <p className=" text-5xl font-mono font-bold">
+            <LucideIcons.Coins className="text-yellow-400" />
+            <p className="text-3xl md:text-5xl font-mono font-bold">
               {gameState.donations.toFixed(0)}
             </p>
           </div>
-          {/* <div className="ml-4 flex items-center space-x-2">
-      <LucideIcons.Zap className="text-orange-400" size={24} />
-      <p className="text-lg">{gameState.clickPower}</p>
-    </div> */}
         </div>
 
         {/* Donate Button */}
         <div className="text-center mb-6">
           <button
             onClick={handleClick}
-            className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg shadow-md w-full text-lg font-bold"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md w-full text-base md:text-lg font-bold"
           >
             Donate!
           </button>
         </div>
+
+        {/* Auto-clicker and Upgrade buttons */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <button
             onClick={buyAutoClicker}
             disabled={gameState.donations < gameState.autoClickerCost}
-            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 text-sm md:text-base"
           >
-            <LucideIcons.Clock className="inline mr-2" />{" "}
+            <LucideIcons.Clock className="inline mr-2" />
             {gameState.autoClickerCost}
           </button>
 
           <button
             onClick={buyUpgrade}
             disabled={gameState.donations < gameState.upgradeCost}
-            className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400"
+            className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400 text-sm md:text-base"
           >
-            <LucideIcons.Zap className="inline mr-2" /> {gameState.upgradeCost}
+            <LucideIcons.Zap className="inline mr-2" />
+            {gameState.upgradeCost}
           </button>
         </div>
 
-        <div className="text-xl mb-4 flex justify-around">
+        {/* Stats */}
+        <div className="text-base md:text-xl mb-4 flex justify-around">
           <div className="flex flex-col justify-center items-center">
-            <div className="flex flex-row  justify-center items-center">
+            <div className="flex flex-row justify-center items-center">
               <LucideIcons.Clock className="inline mr-2 text-orange-500" />
-              {gameState.autoClickerLevel} {""}
+              {gameState.autoClickerLevel}
             </div>
-            {gameState.autoClickerby.toFixed(1)} Coins/sec{""}
+            {gameState.autoClickerby.toFixed(1)} Coins/sec
           </div>
           <div className="flex flex-col justify-center items-center">
-            <div className="flex flex-row  justify-center items-center">
-              <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
+            <div className="flex flex-row justify-center items-center">
+              <LucideIcons.Zap className="inline mr-2 text-orange-500" />
               {gameState.upgradeLevel}
             </div>
-            {gameState.clickPowerby.toFixed(1)} Coins/click{""}
+            {gameState.clickPowerby.toFixed(1)} Coins/click
           </div>
         </div>
+
         {/* Special Items */}
-        <h2 className="text-center text-lg font-bold mb-4">Special Items</h2>
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <h2 className="text-center text-base md:text-lg font-bold mb-4">
+          Special Items
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 mb-4">
           {specialItems.map((item) => {
             const isActive =
               activeItems[item.id] && activeItems[item.id] > Date.now();
+            const remainingTime = isActive
+              ? activeItems[item.id] - Date.now()
+              : 0;
+
             return (
               <button
                 title={item.description}
                 key={item.id}
                 onClick={() => buySpecialItem(item)}
-                disabled={gameState.donations < item.cost || !!isActive} // Ensure boolean value
-                className={`py-2 px-4 rounded-lg flex items-center justify-center gap-1 ${
-                  gameState.donations < item.cost || !!isActive // Ensure boolean value
+                disabled={
+                  gameState.donations < item.cost || isActive ? true : undefined
+                }
+                className={`py-2 px-2 md:px-4 rounded-lg flex flex-col items-center justify-center gap-1 text-xs md:text-sm ${
+                  gameState.donations < item.cost || isActive
                     ? "opacity-100 bg-slate-900 cursor-not-allowed"
-                    : "bg-gray-600  hover:bg-gray-700"
+                    : "bg-gray-600 hover:bg-gray-700"
                 } ${
-                  !!isActive
-                    ? "bg-neutral-600 border-2  border-yellow-400 text-white"
+                  isActive
+                    ? "bg-neutral-600 border-2 border-yellow-400 text-white"
                     : ""
                 } text-white`}
               >
                 <div className="flex flex-col justify-center items-center">
                   <div className="flex flex-row gap-1 justify-center items-center">
-                    <span className="text-sm">{item.name}</span>
-                    <span>{item.icon}</span>
+                    <span>{item.name}</span>
+                    {item.icon}
                   </div>
-                  <span className="text-sm text-yellow-400">
-                    {item.cost} coins
-                  </span>
+                  <span className="text-yellow-400">{item.cost} coins</span>
+                  {isActive && item.duration > 0 && (
+                    <span className="text-green-400">
+                      {formatTime(remainingTime)}
+                    </span>
+                  )}
                 </div>
               </button>
             );
           })}
         </div>
 
-        {/* Save Button */}
-
         {/* Achievements */}
-        <h2 className="text-center text-lg font-bold mt-6 mb-4">
+        <h2 className="text-center text-base md:text-lg font-bold mt-6 mb-4">
           Achievements
         </h2>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-2">
           {gameState.achievements.map((achievement) => (
             <button
               onClick={() =>
@@ -619,7 +688,7 @@ const DonationClicker: React.FC = () => {
                 )
               }
               key={achievement.id}
-              className="bg-transparent border border-gray-400 hover:border-white text-white py-2 px-4 rounded-lg text-xs flex items-center justify-center"
+              className="bg-transparent border border-gray-400 hover:border-white text-white py-2 px-2 md:px-4 rounded-lg text-xs flex items-center justify-center"
             >
               <span>
                 <LucideIcons.Medal className="inline mr-2 text-yellow-600" />
@@ -629,48 +698,37 @@ const DonationClicker: React.FC = () => {
           ))}
         </div>
 
-        <div className="text-center mt-4">
-          <button
-            ref={saveButtonRef}
-            onClick={saveProgress}
-            className={`bg-gray-600 hidden text-white py-1 px-3 rounded-md text-sm ${
-              saveIndicator ? "opacity-100" : "opacity-50"
-            }`}
+        {/* Secret Code Input */}
+        <div className="mt-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col md:flex-row items-center justify-center gap-2"
           >
-            {saveIndicator ? "Progress Saved!" : "Save Progress"}
-          </button>
+            <input
+              type="text"
+              placeholder="Enter secret code"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="px-4 py-2 border rounded-lg text-white bg-slate-950 w-full md:w-auto"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg w-full md:w-auto"
+            >
+              ✓
+            </button>
+          </form>
         </div>
-      </div>
-      <div className="flex flex-col justify-center items-center mb-4">
-        {/* Other elements on your page */}
-        {/* <h1 className="text-2xl font-bold">Welcome to the Page</h1> */}
-
-        {/* Input form */}
-        <form onSubmit={handleSubmit} className="mt-4">
-          <input
-            type="text"
-            placeholder="Enter sceret code"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="px-4 py-2 border rounded-lg text-white bg-slate-950"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-gray-500 text-white rounded-lg ml-2"
-          >
-            ✓
-          </button>
-        </form>
 
         {/* Conditionally render buttons after form is submitted */}
         {shouldShowButtons && (
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex gap-2 justify-center">
             <button
               id="aura"
               onClick={addaura}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg"
             >
-              *100{" "}
+              *100
             </button>
             <button
               onClick={minusaura}
