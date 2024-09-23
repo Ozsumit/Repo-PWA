@@ -558,14 +558,14 @@ const DonationClicker: React.FC = () => {
               <LucideIcons.Clock className="inline mr-2 text-orange-500" />
               {gameState.autoClickerLevel} {""}
             </div>
-            {gameState.autoClickerby} Coins/sec{""}
+            {gameState.autoClickerby.toFixed(1)} Coins/sec{""}
           </div>
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row  justify-center items-center">
               <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
               {gameState.upgradeLevel}
             </div>
-            {gameState.clickPowerby} Coins/click{""}
+            {gameState.clickPowerby.toFixed(1)} Coins/click{""}
           </div>
         </div>
         {/* Special Items */}
