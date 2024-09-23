@@ -246,7 +246,7 @@ const DonationClicker: React.FC = () => {
         saveButtonRef.current.click();
       }
     };
-    const autoClickInterval = setInterval(autoClickSave, 5000);
+    const autoClickInterval = setInterval(autoClickSave, 2000);
     return () => clearInterval(autoClickInterval);
   }, []);
 
@@ -317,7 +317,7 @@ const DonationClicker: React.FC = () => {
         }
         setActiveItems((prevItems) => ({
           ...prevItems,
-          [item.id]: Date.now() + (item.id === "timeWarp" ? 60000 : 120000),
+          [item.id]: Date.now() + (item.id === "timeWarp" ? 3000 : 60000),
         }));
         toast.success(`Activated: ${item.name}`, {
           description: item.description,
@@ -484,28 +484,37 @@ const DonationClicker: React.FC = () => {
       {/* Special Items */}
       <h2 className="text-center text-lg font-bold mb-4">Special Items</h2>
       <div className="grid grid-cols-2 gap-2 mb-4">
-        {specialItems.map((item) => (
-          <button
-            title={item.description}
-            key={item.id}
-            onClick={() => buySpecialItem(item)}
-            disabled={gameState.donations < item.cost}
-            className={`bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-1 ${
-              gameState.donations < item.cost
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
-          >
-            <div className="flex flex-col justify-center items-center">
-              <div className="flex flex-row gap-1 justify-center items-center">
-                <span className="text-sm">{item.name}</span>
-                <span>{item.icon}</span>
+        {specialItems.map((item) => {
+          const isActive =
+            activeItems[item.id] && activeItems[item.id] > Date.now();
+          return (
+            <button
+              title={item.description}
+              key={item.id}
+              onClick={() => buySpecialItem(item)}
+              disabled={gameState.donations < item.cost || !!isActive} // Ensure boolean value
+              className={`py-2 px-4 rounded-lg flex items-center justify-center gap-1 ${
+                gameState.donations < item.cost || !!isActive // Ensure boolean value
+                  ? "opacity-100 bg-slate-900 cursor-not-allowed"
+                  : "bg-gray-600  hover:bg-gray-700"
+              } ${
+                !!isActive
+                  ? "bg-neutral-600 border-2  border-yellow-400 text-white"
+                  : ""
+              } text-white`}
+            >
+              <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-row gap-1 justify-center items-center">
+                  <span className="text-sm">{item.name}</span>
+                  <span>{item.icon}</span>
+                </div>
+                <span className="text-sm text-yellow-400">
+                  {item.cost} coins
+                </span>
               </div>
-
-              <span className="text-sm text-yellow-400">{item.cost} coins</span>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
 
       {/* Save Button */}
