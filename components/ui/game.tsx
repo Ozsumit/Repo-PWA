@@ -193,7 +193,7 @@ const specialItems: SpecialItem[] = [
     id: "frostBonus",
     name: "Frost Bonus",
     description: "Freezes auto-clicker cost increase for 2 minutes",
-    cost: 1500,
+    cost: 5000,
     effect: (state) => ({ autoClickerCost: state.autoClickerCost }),
     icon: <LucideIcons.Snowflake color="cyan" />,
   },
@@ -212,6 +212,30 @@ const initialGameState: GameState = {
   luckyCharmActive: false,
   donationMultiplierClicks: 0,
   frostBonusActive: false,
+};
+// Custom hook that handles input logic and button visibility
+const useRevealButtons = (keywords: string[]) => {
+  const [inputValue, setInputValue] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Function to check if any keyword is included in the input
+  const shouldShowButtons =
+    isSubmitted &&
+    keywords.some((keyword) => inputValue.toLowerCase().includes(keyword));
+
+  // Function to handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
+
+  // Return the necessary values
+  return {
+    inputValue,
+    setInputValue,
+    shouldShowButtons,
+    handleSubmit,
+  };
 };
 
 const DonationClicker: React.FC = () => {
@@ -246,7 +270,7 @@ const DonationClicker: React.FC = () => {
         saveButtonRef.current.click();
       }
     };
-    const autoClickInterval = setInterval(autoClickSave, 2000);
+    const autoClickInterval = setInterval(autoClickSave, 1000);
     return () => clearInterval(autoClickInterval);
   }, []);
 
@@ -269,7 +293,44 @@ const DonationClicker: React.FC = () => {
       };
     });
   }, []);
-
+  const addaura = useCallback(() => {
+    setGameState((prev) => {
+      let donationIncrease = prev.clickPower;
+      if (prev.luckyCharmActive && Math.random() < 0.2) {
+        donationIncrease *= 10000000;
+      }
+      if (prev.donationMultiplierClicks > 0) {
+        donationIncrease *= 10000000;
+      }
+      return {
+        ...prev,
+        donations: prev.donations * 100,
+        donationMultiplierClicks: Math.max(
+          0,
+          prev.donationMultiplierClicks - 100
+        ),
+      };
+    });
+  }, []);
+  const minusaura = useCallback(() => {
+    setGameState((prev) => {
+      let donationIncrease = prev.clickPower;
+      if (prev.luckyCharmActive && Math.random() < 0.2) {
+        donationIncrease *= 10000000;
+      }
+      if (prev.donationMultiplierClicks > 0) {
+        donationIncrease *= 10000000;
+      }
+      return {
+        ...prev,
+        donations: prev.donations / 100,
+        donationMultiplierClicks: Math.max(
+          0,
+          prev.donationMultiplierClicks - 100
+        ),
+      };
+    });
+  }, []);
   const buyAutoClicker = useCallback(() => {
     setGameState((prev) => {
       if (prev.donations >= prev.autoClickerCost) {
@@ -317,7 +378,7 @@ const DonationClicker: React.FC = () => {
         }
         setActiveItems((prevItems) => ({
           ...prevItems,
-          [item.id]: Date.now() + (item.id === "timeWarp" ? 3000 : 60000),
+          [item.id]: Date.now() + (item.id === "timeWarp" ? 30000 : 60000),
         }));
         toast.success(`Activated: ${item.name}`, {
           description: item.description,
@@ -429,126 +490,183 @@ const DonationClicker: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const { inputValue, setInputValue, shouldShowButtons, handleSubmit } =
+    useRevealButtons(["imalazyass", "imthedeveloper", "imthedevsgf"]);
   return (
-    <div className="bg-black p-4 rounded-lg shadow-lg w-[90vw] lg:w-144 text-white mx-auto border-2 border-accenth">
-      {/* Top Section with Coins and Donations */}
-      <div className="flex justify-center text-center mb-4">
-        <div className="mr-4 flex items-center space-x-2">
+    <div className="flex flex-col justify-center items-center text-center">
+      <h1 className="text-4xl font-mono w-[90vw] lg:w-144 justify-center  items-center flex flex-col mb-12 font-bold ">
+        Beat the high score of
+        <span className="text-yellow-400  flex items-center">
           <LucideIcons.Coins className="text-yellow-400" size={44} />
-          <p className=" text-5xl font-mono font-bold">{gameState.donations}</p>
+          1245617869
+        </span>
+        to get free lunch
+      </h1>{" "}
+      <div className="bg-black p-4 rounded-lg shadow-lg w-[90vw] lg:w-144 text-white mx-auto border-2 border-accenth">
+        {/* Top Section with Coins and Donations */}
+        <div className="flex justify-center text-center mb-4">
+          <div className="mr-4 flex items-center space-x-2">
+            <LucideIcons.Coins className="text-yellow-400" size={44} />
+            <p className=" text-5xl font-mono font-bold">
+              {gameState.donations}
+            </p>
+          </div>
+          {/* <div className="ml-4 flex items-center space-x-2">
+      <LucideIcons.Zap className="text-orange-400" size={24} />
+      <p className="text-lg">{gameState.clickPower}</p>
+    </div> */}
         </div>
-        {/* <div className="ml-4 flex items-center space-x-2">
-          <LucideIcons.Zap className="text-orange-400" size={24} />
-          <p className="text-lg">{gameState.clickPower}</p>
-        </div> */}
-      </div>
 
-      {/* Donate Button */}
-      <div className="text-center mb-6">
-        <button
-          onClick={handleClick}
-          className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg shadow-md w-full text-lg font-bold"
-        >
-          Donate!
-        </button>
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <button
-          onClick={buyAutoClicker}
-          disabled={gameState.donations < gameState.autoClickerCost}
-          className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-        >
-          <LucideIcons.Clock className="inline mr-2" />{" "}
-          {gameState.autoClickerCost}
-        </button>
-
-        <button
-          onClick={buyUpgrade}
-          disabled={gameState.donations < gameState.upgradeCost}
-          className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400"
-        >
-          <LucideIcons.Zap className="inline mr-2" /> {gameState.upgradeCost}
-        </button>
-      </div>
-
-      <div className="text-xl mb-4 flex justify-around">
-        <div>
-          <LucideIcons.Clock className="inline mr-2 text-orange-500" />{" "}
-          {gameState.autoClickerLevel}
-        </div>
-        <div>
-          <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
-          {gameState.clickPower}
-        </div>
-      </div>
-      {/* Special Items */}
-      <h2 className="text-center text-lg font-bold mb-4">Special Items</h2>
-      <div className="grid grid-cols-2 gap-2 mb-4">
-        {specialItems.map((item) => {
-          const isActive =
-            activeItems[item.id] && activeItems[item.id] > Date.now();
-          return (
-            <button
-              title={item.description}
-              key={item.id}
-              onClick={() => buySpecialItem(item)}
-              disabled={gameState.donations < item.cost || !!isActive} // Ensure boolean value
-              className={`py-2 px-4 rounded-lg flex items-center justify-center gap-1 ${
-                gameState.donations < item.cost || !!isActive // Ensure boolean value
-                  ? "opacity-100 bg-slate-900 cursor-not-allowed"
-                  : "bg-gray-600  hover:bg-gray-700"
-              } ${
-                !!isActive
-                  ? "bg-neutral-600 border-2  border-yellow-400 text-white"
-                  : ""
-              } text-white`}
-            >
-              <div className="flex flex-col justify-center items-center">
-                <div className="flex flex-row gap-1 justify-center items-center">
-                  <span className="text-sm">{item.name}</span>
-                  <span>{item.icon}</span>
-                </div>
-                <span className="text-sm text-yellow-400">
-                  {item.cost} coins
-                </span>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Save Button */}
-
-      {/* Achievements */}
-      <h2 className="text-center text-lg font-bold mt-6 mb-4">Achievements</h2>
-      <div className="grid grid-cols-2 gap-2">
-        {gameState.achievements.map((achievement) => (
+        {/* Donate Button */}
+        <div className="text-center mb-6">
           <button
-            onClick={() =>
-              toast(
-                `${achievement.name}: ${achievement.description}\nRequirement: ${achievement.threshold}`
-              )
-            }
-            key={achievement.id}
-            className="bg-transparent border border-gray-400 hover:border-white text-white py-2 px-4 rounded-lg text-xs flex items-center justify-center"
+            onClick={handleClick}
+            className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg shadow-md w-full text-lg font-bold"
           >
-            <span>
-              <LucideIcons.Medal className="inline mr-2 text-yellow-600" />
-            </span>
-            <span>{achievement.name}</span>
+            Donate!
           </button>
-        ))}
+        </div>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <button
+            onClick={buyAutoClicker}
+            disabled={gameState.donations < gameState.autoClickerCost}
+            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+          >
+            <LucideIcons.Clock className="inline mr-2" />{" "}
+            {gameState.autoClickerCost}
+          </button>
+
+          <button
+            onClick={buyUpgrade}
+            disabled={gameState.donations < gameState.upgradeCost}
+            className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400"
+          >
+            <LucideIcons.Zap className="inline mr-2" /> {gameState.upgradeCost}
+          </button>
+        </div>
+
+        <div className="text-xl mb-4 flex justify-around">
+          <div>
+            <LucideIcons.Clock className="inline mr-2 text-orange-500" />{" "}
+            {gameState.autoClickerLevel}
+          </div>
+          <div>
+            <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
+            {gameState.clickPower}
+          </div>
+        </div>
+        {/* Special Items */}
+        <h2 className="text-center text-lg font-bold mb-4">Special Items</h2>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {specialItems.map((item) => {
+            const isActive =
+              activeItems[item.id] && activeItems[item.id] > Date.now();
+            return (
+              <button
+                title={item.description}
+                key={item.id}
+                onClick={() => buySpecialItem(item)}
+                disabled={gameState.donations < item.cost || !!isActive} // Ensure boolean value
+                className={`py-2 px-4 rounded-lg flex items-center justify-center gap-1 ${
+                  gameState.donations < item.cost || !!isActive // Ensure boolean value
+                    ? "opacity-100 bg-slate-900 cursor-not-allowed"
+                    : "bg-gray-600  hover:bg-gray-700"
+                } ${
+                  !!isActive
+                    ? "bg-neutral-600 border-2  border-yellow-400 text-white"
+                    : ""
+                } text-white`}
+              >
+                <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-row gap-1 justify-center items-center">
+                    <span className="text-sm">{item.name}</span>
+                    <span>{item.icon}</span>
+                  </div>
+                  <span className="text-sm text-yellow-400">
+                    {item.cost} coins
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Save Button */}
+
+        {/* Achievements */}
+        <h2 className="text-center text-lg font-bold mt-6 mb-4">
+          Achievements
+        </h2>
+        <div className="grid grid-cols-2 gap-2">
+          {gameState.achievements.map((achievement) => (
+            <button
+              onClick={() =>
+                toast(
+                  `${achievement.name}: ${achievement.description}\nRequirement: ${achievement.threshold}`
+                )
+              }
+              key={achievement.id}
+              className="bg-transparent border border-gray-400 hover:border-white text-white py-2 px-4 rounded-lg text-xs flex items-center justify-center"
+            >
+              <span>
+                <LucideIcons.Medal className="inline mr-2 text-yellow-600" />
+              </span>
+              <span>{achievement.name}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="text-center mt-4">
+          <button
+            ref={saveButtonRef}
+            onClick={saveProgress}
+            className={`bg-gray-600 hidden text-white py-1 px-3 rounded-md text-sm ${
+              saveIndicator ? "opacity-100" : "opacity-50"
+            }`}
+          >
+            {saveIndicator ? "Progress Saved!" : "Save Progress"}
+          </button>
+        </div>
       </div>
-      <div className="text-center mt-4">
-        <button
-          ref={saveButtonRef}
-          onClick={saveProgress}
-          className={`bg-gray-600 hidden text-white py-1 px-3 rounded-md text-sm ${
-            saveIndicator ? "opacity-100" : "opacity-50"
-          }`}
-        >
-          {saveIndicator ? "Progress Saved!" : "Save Progress"}
-        </button>
+      <div className="flex flex-col justify-center items-center mb-4">
+        {/* Other elements on your page */}
+        {/* <h1 className="text-2xl font-bold">Welcome to the Page</h1> */}
+
+        {/* Input form */}
+        <form onSubmit={handleSubmit} className="mt-4">
+          <input
+            type="text"
+            placeholder="Enter sceret code"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="px-4 py-2 border rounded-lg text-white bg-slate-950"
+          />
+          <button
+            type="submit"
+            className="px-4 py-2 bg-gray-500 text-white rounded-lg ml-2"
+          >
+            ✓
+          </button>
+        </form>
+
+        {/* Conditionally render buttons after form is submitted */}
+        {shouldShowButtons && (
+          <div className="mt-4 flex gap-2">
+            <button
+              id="aura"
+              onClick={addaura}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+            >
+              *100{" "}
+            </button>
+            <button
+              onClick={minusaura}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg"
+            >
+              /100
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
