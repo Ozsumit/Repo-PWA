@@ -214,7 +214,6 @@ const initialGameState: GameState = {
   clickPowerby: 0,
   autoClickerLevel: 0,
   autoClickerby: 0,
-
   luckyCharmActive: false,
   donationMultiplierClicks: 0,
   frostBonusActive: false,
@@ -516,7 +515,7 @@ const DonationClicker: React.FC = () => {
           <div className="mr-4 flex items-center space-x-2">
             <LucideIcons.Coins className="text-yellow-400" size={44} />
             <p className=" text-5xl font-mono font-bold">
-              {gameState.donations}
+              {gameState.donations.toFixed(0)}
             </p>
           </div>
           {/* <div className="ml-4 flex items-center space-x-2">
