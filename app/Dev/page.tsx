@@ -188,6 +188,7 @@ const MyPage: React.FC = () => {
           </div>
           <DeveloperNote />
         </div>
+        a
         {showComponent === "cards" && (
           <HoverEffect
             items={currentCardGroup}
