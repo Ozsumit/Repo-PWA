@@ -6,24 +6,8 @@ import React, {
   useRef,
 } from "react";
 import * as LucideIcons from "lucide-react";
-
-// import { toast } from "sonner";
-import {
-  Coins,
-  Heart,
-  Trophy,
-  Medal,
-  Save,
-  Clock,
-  Zap,
-  Star,
-  Gift,
-  Sparkles,
-  Target,
-  Snowflake,
-} from "lucide-react";
-
 import { toast } from "sonner";
+
 type Achievement = {
   id: string;
   name: string;
@@ -64,7 +48,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach 10 donations",
     threshold: 10,
     achieved: false,
-    icon: <Heart size={16} />,
+    icon: <LucideIcons.Heart />,
   },
   {
     id: "donations100",
@@ -72,7 +56,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach 100 donations",
     threshold: 100,
     achieved: false,
-    icon: <Heart size={16} />,
+    icon: <LucideIcons.Heart />,
   },
   {
     id: "donations1000",
@@ -80,7 +64,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach 1,000 donations",
     threshold: 1000,
     achieved: false,
-    icon: <Heart size={16} />,
+    icon: <LucideIcons.Heart />,
   },
   {
     id: "donations10000",
@@ -88,7 +72,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach 10,000 donations",
     threshold: 10000,
     achieved: false,
-    icon: <Heart size={16} />,
+    icon: <LucideIcons.Heart />,
   },
   {
     id: "donations100000",
@@ -96,7 +80,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach 100,000 donations",
     threshold: 100000,
     achieved: false,
-    icon: <Heart size={16} />,
+    icon: <LucideIcons.Heart />,
   },
   {
     id: "autoclickers1",
@@ -104,7 +88,7 @@ const initialAchievements: Achievement[] = [
     description: "Have 1 auto-clicker",
     threshold: 1,
     achieved: false,
-    icon: <Clock size={16} />,
+    icon: <LucideIcons.Clock />,
   },
   {
     id: "autoclickers5",
@@ -112,7 +96,7 @@ const initialAchievements: Achievement[] = [
     description: "Have 5 auto-clickers",
     threshold: 5,
     achieved: false,
-    icon: <Clock size={16} />,
+    icon: <LucideIcons.Clock />,
   },
   {
     id: "autoclickers25",
@@ -120,7 +104,7 @@ const initialAchievements: Achievement[] = [
     description: "Have 25 auto-clickers",
     threshold: 25,
     achieved: false,
-    icon: <Clock size={16} />,
+    icon: <LucideIcons.Clock />,
   },
   {
     id: "autoclickers100",
@@ -128,7 +112,7 @@ const initialAchievements: Achievement[] = [
     description: "Have 100 auto-clickers",
     threshold: 100,
     achieved: false,
-    icon: <Clock size={16} />,
+    icon: <LucideIcons.Clock />,
   },
   {
     id: "clickpower5",
@@ -136,7 +120,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach click power of 5",
     threshold: 5,
     achieved: false,
-    icon: <Zap size={16} />,
+    icon: <LucideIcons.Zap />,
   },
   {
     id: "clickpower25",
@@ -144,7 +128,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach click power of 25",
     threshold: 25,
     achieved: false,
-    icon: <Zap size={16} />,
+    icon: <LucideIcons.Zap />,
   },
   {
     id: "clickpower100",
@@ -152,7 +136,7 @@ const initialAchievements: Achievement[] = [
     description: "Reach click power of 100",
     threshold: 100,
     achieved: false,
-    icon: <Zap size={16} />,
+    icon: <LucideIcons.Zap />,
   },
   {
     id: "specialitems1",
@@ -160,7 +144,7 @@ const initialAchievements: Achievement[] = [
     description: "Acquire 1 special item",
     threshold: 1,
     achieved: false,
-    icon: <Gift size={16} />,
+    icon: <LucideIcons.Gift />,
   },
   {
     id: "specialitems5",
@@ -168,7 +152,7 @@ const initialAchievements: Achievement[] = [
     description: "Acquire 5 special items",
     threshold: 5,
     achieved: false,
-    icon: <Gift size={16} />,
+    icon: <LucideIcons.Gift />,
   },
 ];
 
@@ -177,43 +161,44 @@ const specialItems: SpecialItem[] = [
     id: "goldenHeart",
     name: "Golden Heart",
     description: "Doubles your click power for 30 seconds",
-    cost: 1000,
+    cost: 10000,
     effect: (state) => ({ clickPower: state.clickPower * 2 }),
-    icon: <Heart color="gold" />,
+    icon: <LucideIcons.Heart color="gold" />,
   },
   {
     id: "luckyCharm",
     name: "Lucky Charm",
     description: "20% chance to get double donations for 1 minute",
-    cost: 750,
+    cost: 1000,
     effect: (state) => ({ donations: state.donations }),
-    icon: <Sparkles color="green" />,
+    icon: <LucideIcons.Sparkles color="green" />,
   },
   {
     id: "timeWarp",
     name: "Time Warp",
-    description: "Doubles auto-clicker speed for 1 minute",
-    cost: 2000,
+    description: "Doubles auto-clicker power for 1 minute",
+    cost: 5000,
     effect: (state) => ({ autoClickerCount: state.autoClickerCount * 2 }),
-    icon: <Clock color="blue" />,
+    icon: <LucideIcons.Clock color="blue" />,
   },
   {
     id: "donationMultiplier",
     name: "Donation Multiplier",
     description: "Triples your donations for the next 20 clicks",
-    cost: 1500,
+    cost: 7000,
     effect: (state) => ({ donations: state.donations }),
-    icon: <Target color="purple" />,
+    icon: <LucideIcons.Target color="purple" />,
   },
   {
     id: "frostBonus",
     name: "Frost Bonus",
     description: "Freezes auto-clicker cost increase for 2 minutes",
-    cost: 1200,
+    cost: 1500,
     effect: (state) => ({ autoClickerCost: state.autoClickerCost }),
-    icon: <Snowflake color="cyan" />,
+    icon: <LucideIcons.Snowflake color="cyan" />,
   },
 ];
+
 const initialGameState: GameState = {
   donations: 0,
   specialItems: specialItems,
@@ -261,24 +246,19 @@ const DonationClicker: React.FC = () => {
         saveButtonRef.current.click();
       }
     };
-
     const autoClickInterval = setInterval(autoClickSave, 5000);
-
     return () => clearInterval(autoClickInterval);
   }, []);
 
   const handleClick = useCallback(() => {
     setGameState((prev) => {
       let donationIncrease = prev.clickPower;
-
       if (prev.luckyCharmActive && Math.random() < 0.2) {
         donationIncrease *= 2;
       }
-
       if (prev.donationMultiplierClicks > 0) {
         donationIncrease *= 3;
       }
-
       return {
         ...prev,
         donations: prev.donations + donationIncrease,
@@ -289,6 +269,7 @@ const DonationClicker: React.FC = () => {
       };
     });
   }, []);
+
   const buyAutoClicker = useCallback(() => {
     setGameState((prev) => {
       if (prev.donations >= prev.autoClickerCost) {
@@ -331,22 +312,17 @@ const DonationClicker: React.FC = () => {
           donations: prev.donations - item.cost,
           ...item.effect(prev),
         };
-
         if (item.id === "frostBonus") {
           newState.frostBonusActive = true;
         }
-
         setActiveItems((prevItems) => ({
           ...prevItems,
           [item.id]: Date.now() + (item.id === "timeWarp" ? 60000 : 120000),
         }));
-
-        // Display toast notification
         toast.success(`Activated: ${item.name}`, {
           description: item.description,
           icon: item.icon,
         });
-
         return newState;
       }
       return prev;
@@ -435,112 +411,55 @@ const DonationClicker: React.FC = () => {
                   case "luckyCharm":
                   case "donationMultiplier":
                   case "frostBonus":
-                    // These items don't need reverting
-                    return prev;
-                  default:
-                    return prev;
+                    return {
+                      ...prev,
+                      luckyCharmActive: false,
+                      frostBonusActive: false,
+                    };
                 }
               }
               return prev;
             });
-
-            // Display toast notification when effect ends
-            const item = specialItems.find((i) => i.id === id);
-            if (item) {
-              toast.info(`${item.name} effect has ended`, {
-                icon: item.icon,
-              });
-            }
           }
         });
         return newItems;
       });
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
-  const sortedAchievements = useMemo(
-    () => [...gameState.achievements].sort((a, b) => a.threshold - b.threshold),
-    [gameState.achievements]
-  );
-
-  const renderSpecialItems = useMemo(() => {
-    return gameState.specialItems?.map((item) => (
-      <button
-        key={item.id}
-        onClick={() => buySpecialItem(item)}
-        disabled={gameState.donations < item.cost}
-        className={`p-2 bg-slate-750 text-white rounded-lg hover:bg-gray-600 disabled:bg-gray-700 ${
-          activeItems[item.id] ? "border-2 border-yellow-400" : ""
-        }`}
-        title={item.description}
-      >
-        {React.cloneElement(item.icon as React.ReactElement, { size: 24 })}
-        <div className="text-xs">{item.name}</div>
-        <div className="text-xs">{item.cost} coins</div>
-        {activeItems[item.id] && (
-          <div className="text-xs text-yellow-400">
-            {Math.ceil((activeItems[item.id] - Date.now()) / 1000)}s
-          </div>
-        )}
-      </button>
-    ));
-  }, [
-    gameState.specialItems,
-    activeItems,
-    gameState.donations,
-    buySpecialItem,
-  ]);
-
-  const achievementsList = useMemo(
-    () =>
-      sortedAchievements.map((achievement) => (
-        <div
-          key={achievement.id}
-          className={`p-2 rounded border-gray-500 border-[1px] ${
-            achievement.achieved ? "bg-accenth" : "bg-black"
-          } cursor-pointer`}
-          title={achievement.description}
-          onClick={() =>
-            toast(
-              `${achievement.name}: ${achievement.description}\nRequirement: ${achievement.threshold}`
-            )
-          }
-        >
-          {React.cloneElement(achievement.icon as React.ReactElement, {
-            size: 16,
-          })}
-          <span className="ml-1">{achievement.name}</span>
-        </div>
-      )),
-    [sortedAchievements]
-  );
-
   return (
-    <div className="md:w-144 w-[90vw] mx-auto p-4 bg-black border-2 border-accent rounded-lg shadow-md text-center">
-      <h1 className="text-3xl font-bold mb-4 text-blue-600">
-        Donation Clicker
-      </h1>
-
-      <div className="text-4xl font-bold mb-4">
-        <LucideIcons.Coins className="inline mr-2 text-yellow-500" />
-        {gameState.donations.toLocaleString()}
+    <div className="bg-black p-4 rounded-lg shadow-lg w-[90vw] lg:w-144 text-white mx-auto border-2 border-accenth">
+      {/* Top Section with Coins and Donations */}
+      <div className="flex justify-center text-center mb-4">
+        <div className="mr-4 flex items-center space-x-2">
+          <LucideIcons.Coins className="text-yellow-400" size={44} />
+          <p className=" text-5xl font-mono font-bold">{gameState.donations}</p>
+        </div>
+        {/* <div className="ml-4 flex items-center space-x-2">
+          <LucideIcons.Zap className="text-orange-400" size={24} />
+          <p className="text-lg">{gameState.clickPower}</p>
+        </div> */}
       </div>
 
-      <button
-        onClick={handleClick}
-        className="w-full py-4 px-6 mb-4 bg-green-500 text-white text-xl font-bold rounded-lg hover:bg-green-600 transition-colors"
-      >
-        <LucideIcons.Heart className="inline mr-2" /> Donate!
-      </button>
-
+      {/* Donate Button */}
+      <div className="text-center mb-6">
+        <button
+          onClick={handleClick}
+          className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg shadow-md w-full text-lg font-bold"
+        >
+          Donate!
+        </button>
+      </div>
       <div className="grid grid-cols-2 gap-4 mb-4">
         <button
           onClick={buyAutoClicker}
           disabled={gameState.donations < gameState.autoClickerCost}
           className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
         >
-          <Clock className="inline mr-2" /> {gameState.autoClickerCost}
+          <LucideIcons.Clock className="inline mr-2" />{" "}
+          {gameState.autoClickerCost}
         </button>
 
         <button
@@ -548,50 +467,80 @@ const DonationClicker: React.FC = () => {
           disabled={gameState.donations < gameState.upgradeCost}
           className="py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-400"
         >
-          <Zap className="inline mr-2" /> {gameState.upgradeCost}
+          <LucideIcons.Zap className="inline mr-2" /> {gameState.upgradeCost}
         </button>
       </div>
 
       <div className="text-xl mb-4 flex justify-around">
         <div>
-          <Clock className="inline mr-2 text-orange-500" />{" "}
+          <LucideIcons.Clock className="inline mr-2 text-orange-500" />{" "}
           {gameState.autoClickerLevel}
         </div>
         <div>
-          <Zap className="inline mr-2 text-orange-500" /> {gameState.clickPower}
+          <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
+          {gameState.clickPower}
         </div>
       </div>
+      {/* Special Items */}
+      <h2 className="text-center text-lg font-bold mb-4">Special Items</h2>
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        {specialItems.map((item) => (
+          <button
+            title={item.description}
+            key={item.id}
+            onClick={() => buySpecialItem(item)}
+            disabled={gameState.donations < item.cost}
+            className={`bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-1 ${
+              gameState.donations < item.cost
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+          >
+            <div className="flex flex-col justify-center items-center">
+              <div className="flex flex-row gap-1 justify-center items-center">
+                <span className="text-sm">{item.name}</span>
+                <span>{item.icon}</span>
+              </div>
 
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold mb-2">Special Items</h2>
-        <div className="grid grid-cols-3 gap-2">{renderSpecialItems}</div>
+              <span className="text-sm text-yellow-400">{item.cost} coins</span>
+            </div>
+          </button>
+        ))}
       </div>
 
-      <button
-        ref={saveButtonRef}
-        onClick={saveProgress}
-        className="w-6/12 py-2 px-4 mb-4 bg-grays text-white rounded-lg hover:bg-blue-600 transition-colors"
-      >
-        <Save className="inline mr-2" /> Save
-      </button>
+      {/* Save Button */}
 
-      <div className="grid grid-cols-2 gap-2 text-left mb-4">
-        {achievementsList}
+      {/* Achievements */}
+      <h2 className="text-center text-lg font-bold mt-6 mb-4">Achievements</h2>
+      <div className="grid grid-cols-2 gap-2">
+        {gameState.achievements.map((achievement) => (
+          <button
+            onClick={() =>
+              toast(
+                `${achievement.name}: ${achievement.description}\nRequirement: ${achievement.threshold}`
+              )
+            }
+            key={achievement.id}
+            className="bg-transparent border border-gray-400 hover:border-white text-white py-2 px-4 rounded-lg text-xs flex items-center justify-center"
+          >
+            <span>
+              <LucideIcons.Medal className="inline mr-2 text-yellow-600" />
+            </span>
+            <span>{achievement.name}</span>
+          </button>
+        ))}
       </div>
-
-      {showAchievement && (
-        <div className="fixed bottom-4 left-4 p-4 bg-yellow-500 text-black rounded-lg shadow-lg animate-bounce">
-          <Medal className="inline mr-2 text-yellow-600" />
-          {showAchievement.name}
-        </div>
-      )}
-
-      {saveIndicator && (
-        <div className="fixed bottom-4 right-4 p-2 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg">
-          <Save className="inline mr-2 text-green-600" />
-          Saved!
-        </div>
-      )}
+      <div className="text-center mt-4">
+        <button
+          ref={saveButtonRef}
+          onClick={saveProgress}
+          className={`bg-gray-600 hidden text-white py-1 px-3 rounded-md text-sm ${
+            saveIndicator ? "opacity-100" : "opacity-50"
+          }`}
+        >
+          {saveIndicator ? "Progress Saved!" : "Save Progress"}
+        </button>
+      </div>
     </div>
   );
 };
