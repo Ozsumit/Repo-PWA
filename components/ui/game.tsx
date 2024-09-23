@@ -32,6 +32,9 @@ type GameState = {
   autoClickerCount: number;
   autoClickerCost: number;
   upgradeCost: number;
+  autoClickerby: number;
+
+  clickPowerby: number;
   achievements: Achievement[];
   upgradeLevel: number;
   autoClickerLevel: number;
@@ -178,7 +181,7 @@ const specialItems: SpecialItem[] = [
     name: "Time Warp",
     description: "Doubles auto-clicker power for 1 minute",
     cost: 5000,
-    effect: (state) => ({ autoClickerCount: state.autoClickerCount * 2 }),
+    effect: (state) => ({ autoClickerCount: state.autoClickerCount * 10 }),
     icon: <LucideIcons.Clock color="blue" />,
   },
   {
@@ -186,7 +189,7 @@ const specialItems: SpecialItem[] = [
     name: "Donation Multiplier",
     description: "Triples your donations for the next 20 clicks",
     cost: 7000,
-    effect: (state) => ({ donations: state.donations }),
+    effect: (state) => ({ donations: state.donations * 3 }),
     icon: <LucideIcons.Target color="purple" />,
   },
   {
@@ -208,7 +211,10 @@ const initialGameState: GameState = {
   upgradeCost: 50,
   achievements: initialAchievements,
   upgradeLevel: 0,
+  clickPowerby: 0,
   autoClickerLevel: 0,
+  autoClickerby: 0,
+
   luckyCharmActive: false,
   donationMultiplierClicks: 0,
   frostBonusActive: false,
@@ -343,6 +349,7 @@ const DonationClicker: React.FC = () => {
           donations: prev.donations - prev.autoClickerCost,
           autoClickerCount: prev.autoClickerCount + 1,
           autoClickerCost: newAutoClickerCost,
+          autoClickerby: prev.autoClickerCount * 1.5,
           autoClickerLevel: prev.autoClickerCount + 1,
         };
       }
@@ -359,6 +366,7 @@ const DonationClicker: React.FC = () => {
           clickPower: prev.clickPower + 1,
           upgradeCost: Math.ceil(prev.upgradeCost * 1.7),
           upgradeLevel: prev.upgradeLevel + 1,
+          clickPowerby: prev.clickPower * 1.7,
         };
       }
       return prev;
@@ -546,13 +554,19 @@ const DonationClicker: React.FC = () => {
         </div>
 
         <div className="text-xl mb-4 flex justify-around">
-          <div>
-            <LucideIcons.Clock className="inline mr-2 text-orange-500" />{" "}
-            {gameState.autoClickerLevel}
+          <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-row  justify-center items-center">
+              <LucideIcons.Clock className="inline mr-2 text-orange-500" />
+              {gameState.autoClickerLevel} {""}
+            </div>
+            {gameState.autoClickerby} Coins/sec{""}
           </div>
-          <div>
-            <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
-            {gameState.clickPower}
+          <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-row  justify-center items-center">
+              <LucideIcons.Zap className="inline mr-2 text-orange-500" />{" "}
+              {gameState.upgradeLevel}
+            </div>
+            {gameState.clickPowerby} Coins/click{""}
           </div>
         </div>
         {/* Special Items */}
