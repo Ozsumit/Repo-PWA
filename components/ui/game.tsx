@@ -7,7 +7,13 @@ import React, {
 } from "react";
 import * as LucideIcons from "lucide-react";
 import { toast } from "sonner";
-
+type Particle = {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  velocity: { x: number; y: number };
+};
 type Achievement = {
   id: string;
   name: string;
@@ -190,7 +196,7 @@ const specialItems: SpecialItem[] = [
     cost: 7000,
     effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
-    duration: 80000,
+    duration: 50000,
   },
   {
     id: "donationMultiplier",
@@ -208,12 +214,12 @@ const specialItems: SpecialItem[] = [
     cost: 450000,
     effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
-    duration: 450000,
+    duration: 45000,
   },
   {
     id: "powerSurge",
     name: "Power Surge",
-    description: "Increases click power by 150% for 45 seconds",
+    description: "Doubles the click power for 45 seconds",
     cost: 18000,
     effect: (state) => ({ clickPower: state.clickPower * 2 }),
     icon: <LucideIcons.Zap color="yellow" />,
@@ -262,7 +268,8 @@ const initialGameState: GameState = {
 const useRevealButtons = (keywords: string[]) => {
   const [inputValue, setInputValue] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   // Function to check if any keyword is included in the input
   const shouldShowButtons =
     isSubmitted &&
@@ -292,7 +299,8 @@ const DonationClicker: React.FC = () => {
       return initialGameState;
     }
   });
-
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [showAchievement, setShowAchievement] = useState<Achievement | null>(
     null
   );
@@ -301,6 +309,16 @@ const DonationClicker: React.FC = () => {
 
   const saveButtonRef = useRef<HTMLButtonElement>(null);
 
+  const createParticle = (x: number, y: number): Particle => ({
+    id: Math.random(),
+    x,
+    y,
+    size: Math.random() * 10 + 5,
+    velocity: {
+      x: (Math.random() - 0.5) * 8,
+      y: Math.random() * -15 - 10,
+    },
+  });
   const saveProgress = useCallback(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("donationClickerState", JSON.stringify(gameState));
@@ -339,6 +357,13 @@ const DonationClicker: React.FC = () => {
       if (prev.rainbowBoostActive) {
         donationIncrease *= 1.5;
       }
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        const newParticles = Array.from({ length: 10 }, () =>
+          createParticle(rect.left + rect.width / 2, rect.top + rect.height / 2)
+        );
+        setParticles((prev) => [...prev, ...newParticles]);
+      }
       return {
         ...prev,
         donations: prev.donations + donationIncrease,
@@ -349,7 +374,23 @@ const DonationClicker: React.FC = () => {
       };
     });
   }, []);
-
+  useEffect(() => {
+    if (particles.length > 0) {
+      const animationFrame = requestAnimationFrame(() => {
+        setParticles((prevParticles) =>
+          prevParticles
+            .map((p) => ({
+              ...p,
+              x: p.x + p.velocity.x,
+              y: p.y + p.velocity.y,
+              velocity: { ...p.velocity, y: p.velocity.y + 0.8 },
+            }))
+            .filter((p) => p.y < window.innerHeight)
+        );
+      });
+      return () => cancelAnimationFrame(animationFrame);
+    }
+  }, [particles]);
   const buyAutoClicker = useCallback(() => {
     setGameState((prev) => {
       if (prev.donations >= prev.autoClickerCost) {
@@ -618,6 +659,11 @@ const DonationClicker: React.FC = () => {
       </h1>
       <div className="bg-black p-4 rounded-lg shadow-lg w-full md:w-144 text-white mx-auto border-2 border-accenth">
         {/* Top Section with Coins and Donations */}
+        <h1 className="text-2xl md:text-4xl font-mono w-[90vw] md:w-144 justify-center items-center flex  mb-6 md:mb-12 font-bold">
+          Donation Clicker
+          <LucideIcons.Coins className="text-yellow-400" />
+        </h1>
+
         <div className="flex justify-center text-center mb-4">
           <div className="mr-4 flex items-center space-x-2">
             <LucideIcons.Coins className="text-yellow-400" />
@@ -628,12 +674,13 @@ const DonationClicker: React.FC = () => {
         </div>
 
         {/* Donate Button */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 relative flex flex-col justify-center items-center">
           <button
+            ref={buttonRef}
             onClick={handleClick}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md w-full text-base md:text-lg font-bold"
+            className=" flex flex-col justify-center items-center bg-green-500 hover:bg-green-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md w-[30rem] h-[10rem] text-base md:text-lg font-bold"
           >
-            Donate!
+            Donate!{" "}
           </button>
         </div>
 
