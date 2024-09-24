@@ -742,7 +742,7 @@ const DonationClicker: React.FC = () => {
               <span>
                 <LucideIcons.Medal className="inline mr-2 text-yellow-600" />
               </span>
-              <span className="text-lg">{achievement.name}</span>
+              <span className="text-md">{achievement.name}</span>
             </button>
           ))}
         </div>
