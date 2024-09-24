@@ -599,7 +599,7 @@ const DonationClicker: React.FC = () => {
     });
   }, []);
   const { inputValue, setInputValue, shouldShowButtons, handleSubmit } =
-    useRevealButtons(["imalazyass", "imthedeveloper", "imthedevsgf"]);
+    useRevealButtons(["jojo", "imthedeveloper", "imthedevsgf"]);
 
   return (
     <div className="flex flex-col justify-center items-center text-center p-4">
