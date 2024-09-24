@@ -759,7 +759,7 @@ const DonationClicker: React.FC = () => {
                   }`}
                 />
               </span>
-              <span className="text-xl">{achievement.name}</span>
+              <span className="text-md">{achievement.name}</span>
             </button>
           ))}
         </div>
