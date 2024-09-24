@@ -54,40 +54,40 @@ const initialAchievements: Achievement[] = [
   {
     id: "donations10",
     name: "Novice Donor",
-    description: "Reach 10 donations",
-    threshold: 10,
-    achieved: false,
-    icon: <LucideIcons.Heart />,
-  },
-  {
-    id: "donations100",
-    name: "Generous Soul",
     description: "Reach 100 donations",
     threshold: 100,
     achieved: false,
     icon: <LucideIcons.Heart />,
   },
   {
+    id: "donations100",
+    name: "Generous Soul",
+    description: "Reach 10000 donations",
+    threshold: 10000,
+    achieved: false,
+    icon: <LucideIcons.Heart />,
+  },
+  {
     id: "donations1000",
     name: "Philanthropist",
-    description: "Reach 1,000 donations",
-    threshold: 1000,
+    description: "Reach 100,000 donations",
+    threshold: 100000,
     achieved: false,
     icon: <LucideIcons.Heart />,
   },
   {
     id: "donations10000",
     name: "Benefactor",
-    description: "Reach 10,000 donations",
-    threshold: 10000,
+    description: "Reach 10,000,000 donations",
+    threshold: 10000000,
     achieved: false,
     icon: <LucideIcons.Heart />,
   },
   {
     id: "donations100000",
     name: "Humanitarian",
-    description: "Reach 100,000 donations",
-    threshold: 100000,
+    description: "Reach 1,000,000,000 donations",
+    threshold: 1000000000,
     achieved: false,
     icon: <LucideIcons.Heart />,
   },
@@ -612,7 +612,7 @@ const DonationClicker: React.FC = () => {
         Beat the high score of
         <span className="text-yellow-400 flex items-center">
           <LucideIcons.Coins className="text-yellow-400" />
-          124561178679
+          124561178679344512
         </span>
         to get free lunch
       </h1>
