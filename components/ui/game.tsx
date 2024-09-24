@@ -190,7 +190,7 @@ const specialItems: SpecialItem[] = [
     cost: 7000,
     effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
-    duration: 60000,
+    duration: 80000,
   },
   {
     id: "donationMultiplier",
@@ -604,15 +604,15 @@ const DonationClicker: React.FC = () => {
     });
   }, []);
   const { inputValue, setInputValue, shouldShowButtons, handleSubmit } =
-    useRevealButtons(["imalazyass", "imthedeveloper", "imthedevsgf"]);
+    useRevealButtons(["jojo", "imthedeveloper", "imthedevsgf"]);
 
   return (
     <div className="flex flex-col justify-center items-center text-center p-4">
-      <h1 className="text-2xl md:text-4xl font-mono w-full md:w-144 justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
+      <h1 className="text-2xl md:text-4xl font-mono w-[90vw] md:w-144 justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
         Beat the high score of
         <span className="text-yellow-400 flex items-center">
           <LucideIcons.Coins className="text-yellow-400" />
-          1245617869
+          124561178679
         </span>
         to get free lunch
       </h1>
