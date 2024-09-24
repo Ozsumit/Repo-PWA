@@ -190,7 +190,7 @@ const specialItems: SpecialItem[] = [
     cost: 7000,
     effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
-    duration: 80000,
+    duration: 50000,
   },
   {
     id: "donationMultiplier",
@@ -208,12 +208,12 @@ const specialItems: SpecialItem[] = [
     cost: 450000,
     effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
-    duration: 450000,
+    duration: 45000,
   },
   {
     id: "powerSurge",
     name: "Power Surge",
-    description: "Increases click power by 150% for 45 seconds",
+    description: "Doubles the click power for 45 seconds",
     cost: 18000,
     effect: (state) => ({ clickPower: state.clickPower * 2 }),
     icon: <LucideIcons.Zap color="yellow" />,
