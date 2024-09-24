@@ -603,7 +603,7 @@ const DonationClicker: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center text-center p-4">
-      <h1 className="text-2xl md:text-4xl font-mono w-full md:w-144 justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
+      <h1 className="text-2xl md:text-4xl font-mono w-[90vw] md:w-144 justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
         Beat the high score of
         <span className="text-yellow-400 flex items-center">
           <LucideIcons.Coins className="text-yellow-400" />
