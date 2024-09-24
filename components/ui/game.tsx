@@ -678,7 +678,7 @@ const DonationClicker: React.FC = () => {
           <button
             ref={buttonRef}
             onClick={handleClick}
-            className=" flex flex-col justify-center items-center bg-green-500 hover:bg-green-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md w-[30rem] h-[10rem] text-base md:text-lg font-bold"
+            className=" flex flex-col justify-center items-center bg-green-500 hover:bg-green-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md w-full md:w-[30rem] h-[10rem] text-base md:text-lg font-bold"
           >
             Donate!{" "}
           </button>
