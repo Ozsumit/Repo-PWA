@@ -204,11 +204,11 @@ const specialItems: SpecialItem[] = [
   {
     id: "frostBonus",
     name: "Frost Bonus",
-    description: "Freezes auto-clicker cost increase for 2 minutes",
+    description: "Freezes auto-clicker cost increase for 30 seconds",
     cost: 10000,
     effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
-    duration: 120000,
+    duration: 30000,
   },
   {
     id: "powerSurge",
