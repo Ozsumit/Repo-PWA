@@ -190,7 +190,7 @@ const specialItems: SpecialItem[] = [
     cost: 7000,
     effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
-    duration: 60000,
+    duration: 80000,
   },
   {
     id: "donationMultiplier",
@@ -205,7 +205,7 @@ const specialItems: SpecialItem[] = [
     id: "frostBonus",
     name: "Frost Bonus",
     description: "Freezes auto-clicker cost increase for 30 seconds",
-    cost: 10000,
+    cost: 310000,
     effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
     duration: 30000,
