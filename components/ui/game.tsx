@@ -204,32 +204,32 @@ const specialItems: SpecialItem[] = [
   {
     id: "frostBonus",
     name: "Frost Bonus",
-    description: "Freezes auto-clicker cost increase for 2 minutes",
-    cost: 10000,
+    description: "Freezes auto-clicker cost increase for 45 seconds",
+    cost: 450000,
     effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
-    duration: 120000,
+    duration: 450000,
   },
   {
     id: "powerSurge",
     name: "Power Surge",
     description: "Increases click power by 150% for 45 seconds",
-    cost: 15000,
-    effect: (state) => ({ clickPower: state.clickPower * 3 }),
+    cost: 18000,
+    effect: (state) => ({ clickPower: state.clickPower * 2 }),
     icon: <LucideIcons.Zap color="yellow" />,
-    duration: 50000,
+    duration: 30000,
   },
   {
     id: "autoBoost",
     name: "Auto Boost",
     description: "Increases auto-clicker efficiency by 25% for 2 minutes",
-    cost: 20000,
+    cost: 30000,
     effect: (state) => ({
       autoClickerBoostActive: true, // Keep this property
       // Add other properties from GameState here, even if they are not modified
       donations: state.donations,
       clickPower: state.clickPower,
-      autoClickerCount: state.autoClickerCount * 8,
+      autoClickerCount: state.autoClickerCount * 7,
       // ... and so on for all properties in GameState
     }),
     icon: <LucideIcons.Cpu color="orange" />,
@@ -393,14 +393,23 @@ const DonationClicker: React.FC = () => {
   }, []);
   const buySpecialItem = useCallback((item: SpecialItem) => {
     setGameState((prev: GameState) => {
-      if (prev.donations >= item.cost) {
-        const newCost = Math.ceil(item.cost * 1.014);
+      const currentItem = prev.specialItems.find((si) => si.id === item.id);
+      if (!currentItem) return prev;
+
+      if (prev.donations >= currentItem.cost) {
+        const newCost = Math.ceil(currentItem.cost * 1.45); // Increase by 45%
+        const newSpecialItems = prev.specialItems.map((si) =>
+          si.id === item.id ? { ...si, cost: newCost } : si
+        );
+
         const newState: GameState = {
           ...prev,
-          donations: prev.donations - item.cost,
-          specialItems: (prev.specialItems || []).map((si) =>
-            si.id === item.id ? { ...si, cost: newCost } : si
-          ),
+          donations: prev.donations - currentItem.cost,
+          specialItems: newSpecialItems, // Update items in the game state
+          specialItemBonus: {
+            clickPower: prev.specialItemBonus?.clickPower || 0,
+            autoClickerPower: prev.specialItemBonus?.autoClickerPower || 0,
+          },
         };
 
         if (item.duration > 0) {
@@ -410,16 +419,12 @@ const DonationClicker: React.FC = () => {
           }));
         }
 
+        // Apply item effects
         const effectResult = item.effect(newState);
         Object.assign(newState, effectResult);
 
         // Update specialItemBonus based on the item's effect
         if (item.id === "goldenHeart") {
-          newState.specialItemBonus = newState.specialItemBonus || {
-            clickPower: 0,
-            autoClickerPower: 0,
-          };
-
           newState.specialItemBonus.clickPower += prev.clickPower;
         } else if (item.id === "timeWarp") {
           newState.specialItemBonus.autoClickerPower +=
@@ -662,7 +667,7 @@ const DonationClicker: React.FC = () => {
               {gameState.autoClickerby} Coins/sec
               {gameState.specialItemBonus?.autoClickerPower > 0 && (
                 <span className="text-green-400">
-                  +{gameState.specialItemBonus.autoClickerPower}
+                  +{gameState.specialItemBonus.autoClickerPower.toFixed(1)}
                 </span>
               )}
             </div>
@@ -676,7 +681,7 @@ const DonationClicker: React.FC = () => {
               {gameState.clickPowerby} Coins/click
               {gameState.specialItemBonus?.clickPower > 0 && (
                 <span className="text-green-400 ml-1">
-                  +{gameState.specialItemBonus.clickPower}
+                  +{gameState.specialItemBonus.clickPower.toFixed(1)}
                 </span>
               )}
             </div>
@@ -690,16 +695,21 @@ const DonationClicker: React.FC = () => {
               ? activeItems[item.id] - Date.now()
               : 0;
 
+            // No need to calculate new cost here again, just display the current cost from gameState
+            const itemCost =
+              gameState.specialItems.find((si) => si.id === item.id)?.cost ||
+              item.cost;
+
             return (
               <button
                 title={item.description}
                 key={item.id}
                 onClick={() => buySpecialItem(item)}
                 disabled={
-                  gameState.donations < item.cost || isActive ? true : undefined
+                  gameState.donations < itemCost || isActive ? true : undefined
                 }
                 className={`py-2 px-2 md:px-4 rounded-lg flex flex-col items-center justify-center gap-1 text-xs md:text-sm ${
-                  gameState.donations < item.cost || isActive
+                  gameState.donations < itemCost || isActive
                     ? "opacity-100 bg-slate-900 cursor-not-allowed"
                     : "bg-gray-600 hover:bg-gray-700"
                 } ${
@@ -713,7 +723,7 @@ const DonationClicker: React.FC = () => {
                     <span>{item.name}</span>
                     {item.icon}
                   </div>
-                  <span className="text-yellow-400">{item.cost} coins</span>
+                  <span className="text-yellow-400">{itemCost} coins</span>
                   {isActive && item.duration > 0 && (
                     <span className="text-green-400">
                       {formatTime(remainingTime)}
@@ -725,10 +735,11 @@ const DonationClicker: React.FC = () => {
           })}
         </div>
         {/* Achievements */}
-        <h2 className="text-center text-2xl md:text-2xl font-bold mt-6 mb-4">
+        {/* Achievements */}
+        <h2 className="text-center text-lg font-bold mt-6 mb-4">
           Achievements
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {gameState.achievements.map((achievement) => (
             <button
               onClick={() =>
@@ -737,16 +748,21 @@ const DonationClicker: React.FC = () => {
                 )
               }
               key={achievement.id}
-              className="bg-transparent border border-gray-400 hover:border-white text-white py-2 px-2 md:px-4 rounded-lg text-xl flex items-center justify-center"
+              className={`bg-transparent border ${
+                achievement.achieved ? "border-yellow-400" : "border-gray-400"
+              } hover:border-white text-white py-2 px-4 rounded-lg text-xs flex items-center justify-center`}
             >
               <span>
-                <LucideIcons.Medal className="inline mr-2 text-yellow-600" />
+                <LucideIcons.Medal
+                  className={`inline mr-2 ${
+                    achievement.achieved ? "text-yellow-400" : "text-yellow-600"
+                  }`}
+                />
               </span>
-              <span className="text-xl">{achievement.name}</span>
+              <span>{achievement.name}</span>
             </button>
           ))}
         </div>
-
         {/* Secret Code Input */}
         <div className="mt-4">
           <form
