@@ -26,7 +26,6 @@ type SpecialItem = {
   icon: React.ReactNode;
   duration: number;
 };
-
 type GameState = {
   donations: number;
   clickPower: number;
@@ -392,19 +391,14 @@ const DonationClicker: React.FC = () => {
       return prev;
     });
   }, []);
-
   const buySpecialItem = useCallback((item: SpecialItem) => {
-    setGameState((prev) => {
+    setGameState((prev: GameState) => {
       if (prev.donations >= item.cost) {
-        const newCost = Math.ceil(item.cost * 1.014); // Increase cost by 1.4%
-        console.log(
-          `Buying ${item.name}. Old cost: ${item.cost}, New cost: ${newCost}`
-        );
-
-        const newState = {
+        const newCost = Math.ceil(item.cost * 1.014);
+        const newState: GameState = {
           ...prev,
           donations: prev.donations - item.cost,
-          specialItems: prev.specialItems.map((si) =>
+          specialItems: (prev.specialItems || []).map((si) =>
             si.id === item.id ? { ...si, cost: newCost } : si
           ),
         };
@@ -418,6 +412,19 @@ const DonationClicker: React.FC = () => {
 
         const effectResult = item.effect(newState);
         Object.assign(newState, effectResult);
+
+        // Update specialItemBonus based on the item's effect
+        if (item.id === "goldenHeart") {
+          newState.specialItemBonus = newState.specialItemBonus || {
+            clickPower: 0,
+            autoClickerPower: 0,
+          };
+
+          newState.specialItemBonus.clickPower += prev.clickPower;
+        } else if (item.id === "timeWarp") {
+          newState.specialItemBonus.autoClickerPower +=
+            prev.autoClickerCount * 2;
+        }
 
         toast.success(`Activated: ${item.name}`, {
           description: item.description,
@@ -500,16 +507,24 @@ const DonationClicker: React.FC = () => {
         Object.entries(newItems).forEach(([id, endTime]) => {
           if (Date.now() > endTime) {
             delete newItems[id];
-            setGameState((prev) => {
+            setGameState((prev: GameState) => {
               const item = specialItems.find((i) => i.id === id);
               if (item) {
+                const newState: GameState = { ...prev };
                 switch (id) {
                   case "goldenHeart":
-                    return { ...prev, clickPower: prev.clickPower / 2 };
-                  case "luckyCharm":
-                    return { ...prev, luckyCharmActive: false };
+                    newState.specialItemBonus.clickPower = Math.max(
+                      0,
+                      prev.specialItemBonus.clickPower - prev.clickPower
+                    );
+                    break;
                   case "timeWarp":
-                    return { ...prev, timeWarpActive: false };
+                    newState.specialItemBonus.autoClickerPower = Math.max(
+                      0,
+                      prev.specialItemBonus.autoClickerPower -
+                        prev.autoClickerCount * 2
+                    );
+                    break;
                   case "frostBonus":
                     return { ...prev, frostBonusActive: false };
                   case "rainbowBoost":
@@ -644,10 +659,10 @@ const DonationClicker: React.FC = () => {
               {gameState.autoClickerLevel}
             </div>
             <div>
-              {gameState.autoClickerby.toFixed(1)} Coins/sec
-              {(gameState.specialItemBonus?.autoClickerPower ?? 0) > 0 && (
+              {gameState.autoClickerby} Coins/sec
+              {gameState.specialItemBonus?.autoClickerPower > 0 && (
                 <span className="text-green-400">
-                  +{gameState.specialItemBonus?.autoClickerPower ?? 0}
+                  +{gameState.specialItemBonus.autoClickerPower}
                 </span>
               )}
             </div>
@@ -658,17 +673,15 @@ const DonationClicker: React.FC = () => {
               {gameState.upgradeLevel}
             </div>
             <div>
-              {gameState.clickPowerby.toFixed(1)} Coins/click
-              {gameState.specialItemBonus?.clickPower}
-              {(gameState.specialItemBonus?.clickPower || 0) > 0 && (
+              {gameState.clickPowerby} Coins/click
+              {gameState.specialItemBonus?.clickPower > 0 && (
                 <span className="text-green-400 ml-1">
-                  +{(gameState.specialItemBonus?.clickPower || 0).toFixed(1)}
+                  +{gameState.specialItemBonus.clickPower}
                 </span>
               )}
             </div>
           </div>
         </div>
-
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 mb-4">
           {specialItems.map((item) => {
             const isActive =
