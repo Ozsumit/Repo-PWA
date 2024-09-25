@@ -186,7 +186,7 @@ const specialItems: SpecialItem[] = [
   {
     id: "timeWarp",
     name: "Time Warp",
-    description: "Doubles auto-clicker power for 30seconds",
+    description: "Doubles auto-clicker power for 30 seconds",
     cost: 100000,
     effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
@@ -355,14 +355,14 @@ const DonationClicker: React.FC = () => {
       if (prev.donations >= prev.autoClickerCost) {
         const newAutoClickerCost = prev.frostBonusActive
           ? prev.autoClickerCost
-          : Math.ceil(prev.autoClickerCost * 1.9);
+          : Math.ceil(prev.autoClickerCost * 1.5);
 
         return {
           ...prev,
           donations: prev.donations - prev.autoClickerCost,
           autoClickerCount: prev.autoClickerCount + 1,
           autoClickerCost: newAutoClickerCost,
-          autoClickerby: prev.autoClickerCount * 1.9,
+          autoClickerby: prev.autoClickerCount * 1.5,
           autoClickerLevel: prev.autoClickerCount + 1,
         };
       }
@@ -383,7 +383,7 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.upgradeCost,
           clickPower: prev.clickPower + 1,
-          upgradeCost: Math.ceil(prev.upgradeCost * 2),
+          upgradeCost: Math.ceil(prev.upgradeCost * 1.7),
           upgradeLevel: prev.upgradeLevel + 1,
           clickPowerby: prev.clickPower * 1.7,
         };
@@ -397,7 +397,7 @@ const DonationClicker: React.FC = () => {
       if (!currentItem) return prev;
 
       if (prev.donations >= currentItem.cost) {
-        const newCost = Math.ceil(currentItem.cost * 2.3); // Increase by 45%
+        const newCost = Math.ceil(currentItem.cost * 1.45); // Increase by 45%
         const newSpecialItems = prev.specialItems.map((si) =>
           si.id === item.id ? { ...si, cost: newCost } : si
         );
@@ -607,28 +607,26 @@ const DonationClicker: React.FC = () => {
     useRevealButtons(["jojo", "imthedeveloper", "imthedevsgf"]);
 
   return (
-    <div className="flex flex-col justify-center items-center text-center p-4">
+    <div className=" flex flex-col justify-center items-center text-center p-4">
       <h1 className="text-2xl md:text-4xl font-mono w-[90vw] md:w-144 justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
         Beat the high score of
         <span className="text-yellow-400 flex items-center">
           <LucideIcons.Coins className="text-yellow-400" />
-          9×10³¹
+          9× 10³¹
         </span>
         to get free lunch
-      </h1>{" "}
+      </h1>
       <div className="bg-black p-4 rounded-lg shadow-lg w-full md:w-144 text-white mx-auto border-2 border-accenth">
         {/* Top Section with Coins and Donations */}
         <div className="flex justify-center text-center mb-4">
           <div className="mr-4 flex items-center space-x-2">
             <LucideIcons.Coins className="text-yellow-400" />
-            <p
-              className="text-3xl md:text-5xl font-mono font-bold text-wrap flex-wrap
-            "
-            >
+            <p className="text-3xl md:text-5xl font-mono font-bold">
               {gameState.donations.toFixed(0)}
             </p>
           </div>
         </div>
+
         {/* Donate Button */}
         <div className="text-center mb-6">
           <button
@@ -638,6 +636,7 @@ const DonationClicker: React.FC = () => {
             Donate!
           </button>
         </div>
+
         <div className="grid grid-cols-2 gap-4 mb-4">
           <button
             onClick={buyAutoClicker}
@@ -656,15 +655,16 @@ const DonationClicker: React.FC = () => {
             <LucideIcons.Zap className="inline mr-2" /> {gameState.upgradeCost}
           </button>
         </div>
+
         {/* Stats */}
         <div className="text-base md:text-xl mb-4 flex justify-around">
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row justify-center items-center">
               <LucideIcons.Clock className="inline mr-2 text-orange-500" />
-              {gameState.autoClickerLevel.toFixed(1)}
+              {gameState.autoClickerLevel}
             </div>
             <div>
-              {gameState.autoClickerby.toFixed(1)} Coins/sec
+              {gameState.autoClickerby} Coins/sec
               {gameState.specialItemBonus?.autoClickerPower > 0 && (
                 <span className="text-green-400">
                   +{gameState.specialItemBonus.autoClickerPower.toFixed(1)}
@@ -675,10 +675,10 @@ const DonationClicker: React.FC = () => {
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row justify-center items-center">
               <LucideIcons.Zap className="inline mr-2 text-orange-500" />
-              {gameState.upgradeLevel.toFixed(1)}
+              {gameState.upgradeLevel}
             </div>
             <div>
-              {gameState.clickPowerby.toFixed(1)} Coins/click
+              {gameState.clickPowerby} Coins/click
               {gameState.specialItemBonus?.clickPower > 0 && (
                 <span className="text-green-400 ml-1">
                   +{gameState.specialItemBonus.clickPower.toFixed(1)}
@@ -762,11 +762,7 @@ const DonationClicker: React.FC = () => {
               <span className="text-md">{achievement.name}</span>
             </button>
           ))}
-        </div>{" "}
-        <h3 className="text-sm mt-16 md:text-sm font-mono w-[90vw] md:w-full justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
-          Since everyone is beating the highscore, Lunch policy will be
-          subjected to be halted till October 28th.{" "}
-        </h3>
+        </div>
         {/* Secret Code Input */}
         <div className="mt-4">
           <form
@@ -799,6 +795,7 @@ const DonationClicker: React.FC = () => {
             {saveIndicator ? "Progress Saved!" : "Save Progress"}
           </button>
         </div>
+
         {/* Conditionally render buttons after form is submitted */}
         {shouldShowButtons && (
           <div className="mt-4 flex gap-2 justify-center">

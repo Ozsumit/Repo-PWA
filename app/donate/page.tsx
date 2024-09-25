@@ -34,7 +34,7 @@ const ImageCollage: React.FC = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-[97vw] flex flex-cool justify-center items center overflow-x-hidden ">
       <div className="grid grid-cols-3 gap-4">
         {images.map((src, index) => (
           <div
@@ -108,11 +108,11 @@ const DonatePage: React.FC = () => {
       }`}
     >
       <div
-        className={`flex justify-center flex-col lg:pt-16 sm:pt-0 w-auto ${
+        className={`flex justify-center flex-col items-center lg:pt-16 sm:pt-0 w-auto ${
           showQR ? "blur-sm" : ""
         }`}
       >
-        <h2 className="text-4xl md:text-6xl text-center font-bold mb-8 animate-pulse">
+        <h2 className="text-4xl md:text-6xl w-[95vw] text-center font-bold mb-8 animate-pulse">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
             Support Our Cause
           </span>
@@ -147,8 +147,13 @@ const DonatePage: React.FC = () => {
 
           <ImageCollage />
         </div>
-
-        <DonationClicker />
+        <div className="flex  flex-col justify-center w-11/12 items-center">
+          <DonationClicker />
+          <h3 className="text-sm mt-16 text-red-600 md:text-sm font-mono w-11/12 md:w-full justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
+            Since everyone is beating the highscore, Lunch policy will be
+            subjected to be halted till October 28th.{" "}
+          </h3>
+        </div>
 
         {/* Ad Placeholder coponent remains unchanged */}
       </div>

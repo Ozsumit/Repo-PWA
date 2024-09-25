@@ -129,7 +129,7 @@ export default function RootLayout({
         <title>Odyssey</title>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
+          content="width=device-width, initial-scale=0.9, maximum-scale=1"
         />
         <link rel="manifest" href="/manifest.json" />
       </Head>
@@ -172,7 +172,7 @@ export default function RootLayout({
           {children}
         </main>
         {/* Mobile Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-black   border-t-[1px] border-t-white/[0.2][#294c83] z-50 md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 bg-black w-[100vw]  border-t-[1px] border-t-[#294c83] z-50 md:hidden">
           <Dock className="py-2 px-4">
             <DockIcon onClick={() => router.push("/")}>
               <MobileNavItem
