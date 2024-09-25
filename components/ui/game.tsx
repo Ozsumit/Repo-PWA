@@ -186,17 +186,17 @@ const specialItems: SpecialItem[] = [
   {
     id: "timeWarp",
     name: "Time Warp",
-    description: "Triples auto-clicker power for 1 minute",
-    cost: 7000,
+    description: "Doubles auto-clicker power for 30seconds",
+    cost: 100000,
     effect: (state) => ({ timeWarpActive: true }),
     icon: <LucideIcons.Clock color="blue" />,
-    duration: 50000,
+    duration: 30000,
   },
   {
     id: "donationMultiplier",
     name: "Donation Multiplier",
     description: "Triples your donations for the next 20 clicks",
-    cost: 7000,
+    cost: 70000,
     effect: (state) => ({ donationMultiplierClicks: 20 }),
     icon: <LucideIcons.Target color="purple" />,
     duration: 0,
@@ -204,17 +204,17 @@ const specialItems: SpecialItem[] = [
   {
     id: "frostBonus",
     name: "Frost Bonus",
-    description: "Freezes auto-clicker cost increase for 45 seconds",
-    cost: 450000,
+    description: "Freezes auto-clicker cost increase for 24 seconds",
+    cost: 500000,
     effect: (state) => ({ frostBonusActive: true }),
     icon: <LucideIcons.Snowflake color="cyan" />,
-    duration: 45000,
+    duration: 24000,
   },
   {
     id: "powerSurge",
     name: "Power Surge",
     description: "Doubles the click power for 45 seconds",
-    cost: 18000,
+    cost: 180000,
     effect: (state) => ({ clickPower: state.clickPower * 2 }),
     icon: <LucideIcons.Zap color="yellow" />,
     duration: 30000,
@@ -222,18 +222,18 @@ const specialItems: SpecialItem[] = [
   {
     id: "autoBoost",
     name: "Auto Boost",
-    description: "Increases auto-clicker efficiency by 25% for 2 minutes",
-    cost: 30000,
+    description: "Increases auto-clicker efficiency by 25% for 20 seconds",
+    cost: 5000000,
     effect: (state) => ({
       autoClickerBoostActive: true, // Keep this property
       // Add other properties from GameState here, even if they are not modified
       donations: state.donations,
       clickPower: state.clickPower,
-      autoClickerCount: state.autoClickerCount * 7,
+      autoClickerCount: state.autoClickerCount * 3,
       // ... and so on for all properties in GameState
     }),
     icon: <LucideIcons.Cpu color="orange" />,
-    duration: 120000,
+    duration: 20000,
   },
 ];
 const initialGameState: GameState = {
@@ -355,14 +355,14 @@ const DonationClicker: React.FC = () => {
       if (prev.donations >= prev.autoClickerCost) {
         const newAutoClickerCost = prev.frostBonusActive
           ? prev.autoClickerCost
-          : Math.ceil(prev.autoClickerCost * 1.5);
+          : Math.ceil(prev.autoClickerCost * 1.9);
 
         return {
           ...prev,
           donations: prev.donations - prev.autoClickerCost,
           autoClickerCount: prev.autoClickerCount + 1,
           autoClickerCost: newAutoClickerCost,
-          autoClickerby: prev.autoClickerCount * 1.5,
+          autoClickerby: prev.autoClickerCount * 1.9,
           autoClickerLevel: prev.autoClickerCount + 1,
         };
       }
@@ -383,7 +383,7 @@ const DonationClicker: React.FC = () => {
           ...prev,
           donations: prev.donations - prev.upgradeCost,
           clickPower: prev.clickPower + 1,
-          upgradeCost: Math.ceil(prev.upgradeCost * 1.7),
+          upgradeCost: Math.ceil(prev.upgradeCost * 2),
           upgradeLevel: prev.upgradeLevel + 1,
           clickPowerby: prev.clickPower * 1.7,
         };
@@ -397,7 +397,7 @@ const DonationClicker: React.FC = () => {
       if (!currentItem) return prev;
 
       if (prev.donations >= currentItem.cost) {
-        const newCost = Math.ceil(currentItem.cost * 1.45); // Increase by 45%
+        const newCost = Math.ceil(currentItem.cost * 2.3); // Increase by 45%
         const newSpecialItems = prev.specialItems.map((si) =>
           si.id === item.id ? { ...si, cost: newCost } : si
         );
@@ -612,21 +612,23 @@ const DonationClicker: React.FC = () => {
         Beat the high score of
         <span className="text-yellow-400 flex items-center">
           <LucideIcons.Coins className="text-yellow-400" />
-          124561178679344512
+          9×10³¹
         </span>
         to get free lunch
-      </h1>
+      </h1>{" "}
       <div className="bg-black p-4 rounded-lg shadow-lg w-full md:w-144 text-white mx-auto border-2 border-accenth">
         {/* Top Section with Coins and Donations */}
         <div className="flex justify-center text-center mb-4">
           <div className="mr-4 flex items-center space-x-2">
             <LucideIcons.Coins className="text-yellow-400" />
-            <p className="text-3xl md:text-5xl font-mono font-bold">
+            <p
+              className="text-3xl md:text-5xl font-mono font-bold text-wrap flex-wrap
+            "
+            >
               {gameState.donations.toFixed(0)}
             </p>
           </div>
         </div>
-
         {/* Donate Button */}
         <div className="text-center mb-6">
           <button
@@ -636,7 +638,6 @@ const DonationClicker: React.FC = () => {
             Donate!
           </button>
         </div>
-
         <div className="grid grid-cols-2 gap-4 mb-4">
           <button
             onClick={buyAutoClicker}
@@ -655,16 +656,15 @@ const DonationClicker: React.FC = () => {
             <LucideIcons.Zap className="inline mr-2" /> {gameState.upgradeCost}
           </button>
         </div>
-
         {/* Stats */}
         <div className="text-base md:text-xl mb-4 flex justify-around">
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row justify-center items-center">
               <LucideIcons.Clock className="inline mr-2 text-orange-500" />
-              {gameState.autoClickerLevel}
+              {gameState.autoClickerLevel.toFixed(1)}
             </div>
             <div>
-              {gameState.autoClickerby} Coins/sec
+              {gameState.autoClickerby.toFixed(1)} Coins/sec
               {gameState.specialItemBonus?.autoClickerPower > 0 && (
                 <span className="text-green-400">
                   +{gameState.specialItemBonus.autoClickerPower.toFixed(1)}
@@ -675,10 +675,10 @@ const DonationClicker: React.FC = () => {
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row justify-center items-center">
               <LucideIcons.Zap className="inline mr-2 text-orange-500" />
-              {gameState.upgradeLevel}
+              {gameState.upgradeLevel.toFixed(1)}
             </div>
             <div>
-              {gameState.clickPowerby} Coins/click
+              {gameState.clickPowerby.toFixed(1)} Coins/click
               {gameState.specialItemBonus?.clickPower > 0 && (
                 <span className="text-green-400 ml-1">
                   +{gameState.specialItemBonus.clickPower.toFixed(1)}
@@ -762,7 +762,11 @@ const DonationClicker: React.FC = () => {
               <span className="text-md">{achievement.name}</span>
             </button>
           ))}
-        </div>
+        </div>{" "}
+        <h3 className="text-sm mt-16 md:text-sm font-mono w-[90vw] md:w-full justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
+          Since everyone is beating the highscore, Lunch policy will be
+          subjected to be halted till October 28th.{" "}
+        </h3>
         {/* Secret Code Input */}
         <div className="mt-4">
           <form
@@ -795,7 +799,6 @@ const DonationClicker: React.FC = () => {
             {saveIndicator ? "Progress Saved!" : "Save Progress"}
           </button>
         </div>
-
         {/* Conditionally render buttons after form is submitted */}
         {shouldShowButtons && (
           <div className="mt-4 flex gap-2 justify-center">
