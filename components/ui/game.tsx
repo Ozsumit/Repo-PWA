@@ -199,7 +199,7 @@ const specialItems: SpecialItem[] = [
     cost: 70000,
     effect: (state) => ({ donationMultiplierClicks: 20 }),
     icon: <LucideIcons.Target color="purple" />,
-    duration: 0,
+    duration: 30000,
   },
   {
     id: "frostBonus",
