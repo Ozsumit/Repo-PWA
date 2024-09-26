@@ -363,7 +363,7 @@ const DonationClicker: React.FC = () => {
           autoClickerCount: prev.autoClickerCount + 1,
           autoClickerCost: newAutoClickerCost,
           autoClickerby: prev.autoClickerCount * 1.5,
-          autoClickerLevel: prev.autoClickerCount + 1,
+          autoClickerLevel: prev.autoClickerLevel + 1,
         };
       }
       return prev;
