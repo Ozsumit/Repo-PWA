@@ -360,10 +360,10 @@ const DonationClicker: React.FC = () => {
         return {
           ...prev,
           donations: prev.donations - prev.autoClickerCost,
-          autoClickerCount: prev.autoClickerCount + 1,
+          autoClickerCount: prev.autoClickerCount + .4,
           autoClickerCost: newAutoClickerCost,
           autoClickerby: prev.autoClickerCount * 1.5,
-          autoClickerLevel: prev.autoClickerLevel + 1,
+          autoClickerLevel: prev.autoClicker + 1,
         };
       }
       return prev;
