@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
-import DonationClicker from "@/components/ui/game";
+// import DonationClicker from "@/components/ui/game";
 // Updated Image Collage Component
 const ImageCollage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
