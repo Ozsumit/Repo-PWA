@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
-import DonationClicker from "@/components/ui/game";
+// import DonationClicker from "@/components/ui/game";
 // Updated Image Collage Component
 const ImageCollage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
@@ -148,11 +148,17 @@ const DonatePage: React.FC = () => {
           <ImageCollage />
         </div>
         <div className="flex  flex-col justify-center w-11/12 items-center">
-          <DonationClicker />
+{/*           <DonationClicker /> */}
           <h3 className="text-sm mt-16 text-red-600 md:text-sm font-mono w-11/12 md:w-full justify-center items-center flex flex-col mb-6 md:mb-12 font-bold">
-            Since everyone is beating the highscore, Lunch policy will be
-            subjected to be halted till October 28th.{" "}
+           Donation Clicker is now an individual app. Click the button to visit and install the game{" "}
           </h3>
+          <a href="https://game.sumit.info.np/" className="p-[3px] relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#94fc02] to-[#294c83] rounded-lg" />
+                  <div className="px-8 py-2 flex flex-row items-center justify-center bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
+                    Visit Donation Clicker
+                    <DollarSign size={20} />
+                  </div>
+                </a>
         </div>
 
         {/* Ad Placeholder coponent remains unchanged */}
