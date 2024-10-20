@@ -258,7 +258,8 @@ const initialGameState: GameState = {
     clickPower: 0,
     autoClickerPower: 0,
   },
-}; // Custom hook that handles input logic and button visibility
+};
+// Custom hook that handles input logic and button visibility
 const useRevealButtons = (keywords: string[]) => {
   const [inputValue, setInputValue] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -286,7 +287,7 @@ const useRevealButtons = (keywords: string[]) => {
 const DonationClicker: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(() => {
     if (typeof window !== "undefined") {
-      const savedState = localStorage.getItem("donationClickerState");
+      const savedState = localStorage.getItem("donationClickerState7");
       return savedState ? JSON.parse(savedState) : initialGameState;
     } else {
       return initialGameState;
@@ -303,7 +304,7 @@ const DonationClicker: React.FC = () => {
 
   const saveProgress = useCallback(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("donationClickerState", JSON.stringify(gameState));
+      localStorage.setItem("donationClickerState7", JSON.stringify(gameState));
       setSaveIndicator(true);
       setTimeout(() => setSaveIndicator(false), 1000);
     }

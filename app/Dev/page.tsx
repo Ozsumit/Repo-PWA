@@ -28,9 +28,9 @@ const devPdfs: CardItem[] = [
     download: true,
   },
   {
-    title: "Unit 2 C-10/DBMS",
-    description: "Database Design",
-    link: "#pdf",
+    title: "Map ",
+    description: "The uslessys journey",
+    link: "https://www.worldhistory.org/uploads/images/15906.png?v=1725269531-1681478901",
   },
 ];
 
@@ -188,7 +188,7 @@ const MyPage: React.FC = () => {
           </div>
           <DeveloperNote />
         </div>
-        a
+        
         {showComponent === "cards" && (
           <HoverEffect
             items={currentCardGroup}
