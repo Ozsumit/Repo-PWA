@@ -88,7 +88,18 @@ const MyPage: React.FC = () => {
       description: "English Project Cover Page (Remastered & Approved)",
       link: "/downloadables/English (2).pdf",
       download: true,
-    },
+    },  {
+    title: "Sumit CT PPTX",
+    description: "#",
+    link: "public/downloadables/Contemporary Technology.pptx",
+       download: true,
+  },
+  {
+    title: "Diya CT PPTX",
+    description: "ggs",
+    link: "public/downloadables/diya.pptx",
+       download: true,
+  },
   ];
 
   return (
