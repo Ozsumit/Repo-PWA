@@ -39,11 +39,13 @@ const reactCards: CardItem[] = [
     title: "Sumit CT PPTX",
     description: "#",
     link: "public/downloadables/Contemporary Technology.pptx",
+       download: true,
   },
   {
     title: "Diya CT PPTX",
     description: "ggs",
     link: "public/downloadables/diya.pptx",
+       download: true,
   },
 ];
 
