@@ -36,14 +36,14 @@ const devPdfs: CardItem[] = [
 
 const reactCards: CardItem[] = [
   {
-    title: "React Basics",
-    description: "Introduction to React Components",
-    link: "#react",
+    title: "Sumit CT PPTX",
+    description: "#",
+    link: "public/downloadables/Contemporary Technology.pptx",
   },
   {
-    title: "Next.js Fundamentals",
-    description: "Server-Side Rendering with Next.js",
-    link: "#nextjs",
+    title: "Diya CT PPTX",
+    description: "ggs",
+    link: "public/downloadables/diya.pptx",
   },
 ];
 
