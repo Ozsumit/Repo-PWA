@@ -95,6 +95,21 @@ export const urlMappings: {
     Grade: "10",
     subject: "OOP",
   },
+  "Objects and Classes // Constructors and Destructors": {
+    url: "https://drive.google.com/file/d/1rVqiXDxIh5bzFynVq90l4eIcD196pGjO/preview",
+    Grade: "10",
+    subject: "OOP",
+  },
+  "Operator overloading // Inhertance": {
+    url: "https://drive.google.com/file/d/1wfg42y8ovS_7OdS5q_BreV8b4fAfsfNc/preview",
+    Grade: "10",
+    subject: "OOP",
+  },
+  "Polymorphism": {
+    url: "https://drive.google.com/file/d/11BW52I8utDgVb1guD2s-HoBh6g5-qHui/preview",
+    Grade: "10",
+    subject: "OOP",
+  },
   // ----------------------------------------Grade 11 Java-----------------------------------//
   "Java Fundamentals": {
     url: "https://drive.google.com/file/d/1D2YexR8QQfiw_UFrdoUNvZt3d_SzKNHd/preview",

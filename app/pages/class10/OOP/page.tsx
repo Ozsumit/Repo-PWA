@@ -58,23 +58,23 @@ const MyPage = () => {
 
   const lessons = [
     {
-      title: "Unit 1",
+      title: "Unit 1 // 2",
       description: "Introduction to Object Oriented Programming",
       link: "#pdf",
     },
     {
-      title: "Unit 2",
-      description: "Unavailable",
-      link: "#pdf",
-    },
-    {
       title: "Unit 3",
-      description: "Unavailable",
+      description: "Objects and Classes // Constructors and Destructors",
       link: "#pdf",
     },
     {
       title: "Unit 4 ",
-      description: "Unavaialable",
+      description: "Polymorphism",
+      link: "#pdf",
+    },
+    {
+      title: "Unit 5 // 6",
+      description: "Operator overloading // Inheritance",
       link: "#pdf",
     },
     {

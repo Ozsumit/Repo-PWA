@@ -157,13 +157,13 @@ export default function RootLayout({
                 <NavItem href="/QuickFind" icon={Search} title="Quick find" />
               </nav>
               <div className="hidden P-4 mr-4 lg:flex">
-                <Link href="/donate" className="p-[3px] relative">
+                {/* <Link href="/donate" className="p-[3px] relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#94fc02] to-[#294c83] rounded-lg" />
                   <div className="px-8 py-2 flex flex-row items-center justify-center bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
                     Donate
                     <DollarSign size={20} />
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
