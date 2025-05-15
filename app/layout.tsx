@@ -12,7 +12,7 @@ import PulsatingButton from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { useRouter, usePathname } from "next/navigation";
 // import { useServiceWorker } from "@/hooks/useServiceWorker";
-
+import { Analytics } from "@vercel/analytics/next"
 import Head from "next/head";
 import { PushNotificationSubscriber } from "@/components//ui/pushnotification";
 
